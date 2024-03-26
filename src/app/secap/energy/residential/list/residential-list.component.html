@@ -1,0 +1,66 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Residential Energy</h5>
+            </div>
+            <div class="card-body">
+                <p-table #buildingTable [value]="buildings" dataKey="name" [rows]="10" [loading]="loading"
+                [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-building>
+                        <tr>
+                            <td>{{building.name}}</td>
+                            <td>{{building.province}}</td>
+                            <td>{{building.district}}</td>
+                            <td>{{building.neighbourhood}}</td>
+                            <td>{{building.energy}}</td>
+                        </tr>
+                    </ng-template>
+
+                    <!-- <ng-template pTemplate="caption">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(buildingTable)"></button>
+                            <span class="p-input-icon-left mb-2">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" #filter (input)="onGlobalFilter(buildingTable, $event)" placeholder="Search Keyword" class="w-full"/>
+                            </span>
+                        </div>
+                    </ng-template> -->
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="name" >Name <p-sortIcon field="name"></p-sortIcon></th>
+                            <th>Province</th>
+                            <th>District</th>
+                            <th>Neighbourhood</th>
+                            <th>Energy</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-building>
+                        <tr                 (click)="onRowSelect(building)">
+                            <td>{{building.name}}</td>
+                            <td>{{building.province}}</td>
+                            <td>{{building.district}}</td>
+                            <td>{{building.neighbourhood}}</td>
+                            <td>{{building.energy}}</td>
+                        </tr>
+
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8">No buildings found.</td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td colspan="8">Loading building data. Please wait.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -15,12 +15,95 @@ export class AppMenuComponent implements OnInit {
     ngOnInit() {
         this.model = [
             {
-                label: 'Home',
+                icon: 'pi pi-fw pi-home',
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
-                ]
+                    {
+                        label: 'Sabit Enerji',
+                        icon: 'pi pi-fw pi-home',
+                        items: [
+                            {
+                                label: 'Konut',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/energy/residential'],
+                            },
+                            {
+                                label: 'Ticari',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Endüstriyel',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Tarımsal',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                        ],
+                    },
+                ],
             },
             {
+                icon: 'pi pi-fw pi-home',
+                items: [
+                    {
+                        label: 'Ulaşım',
+                        icon: 'pi pi-fw pi-home',
+                        items: [
+                            {
+                                label: 'Karayolu',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Demiryolu',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Denizyolu',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Havayolu',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                icon: 'pi pi-fw pi-home',
+                items: [
+                    {
+                        label: 'Atık Yönetimi',
+                        icon: 'pi pi-fw pi-home',
+                        items: [
+                            {
+                                label: 'Katı Atık',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Biyolojik Atık',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Atık Su Arıtma & Desarj',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                        ],
+                    },
+                ],
+            },
+
+            /*            {
                 label: 'UI Components',
                 items: [
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
@@ -159,7 +242,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
                     }
                 ]
-            }
+            } */
         ];
     }
 }
