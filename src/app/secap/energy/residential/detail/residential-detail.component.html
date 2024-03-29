@@ -1,0 +1,67 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Building info</h4>
+    </div>
+    <div class="card-body p-d-flex p-jc-around p-ai-center">
+        <div class="grid">
+            <div class="col"><strong>ID:</strong> {{building.id}}</div>
+            <div class="col"><strong>Name:</strong> {{building.name}}</div>
+            <div class="col"><strong>Province:</strong> {{building.province}}</div>
+            <div class="col"><strong>District:</strong> {{building.district}}</div>
+            <div class="col"><strong>Neighbourhood:</strong> {{building.neighbourhood}}</div>
+            <div class="col"><strong>Energy:</strong> {{building.energy}}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Energy consumption</h4>
+    </div>
+    <div class="card-body grid">
+            <div class="col"><strong>Electricity:</strong> {{consumption.Electricity}}{{consumption.Unit}}</div>
+            <div class="col"><strong>Heating:</strong> {{ consumption.Heating}}{{consumption.Unit}}</div>
+            <div class="col"><strong>Natural Gas:</strong> {{consumption.NaturalGas}}{{consumption.Unit}}</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+
+    </div>
+    <div class="card-body">
+        <p-table #measurementTable [value]="measurements" dataKey="name" [rows]="10" [loading]="loading"
+                [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+
+
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center justify-content-between">
+                    <h4 class="card-title">Measurements</h4>
+                    <p-button label="New Measurement" icon="pi pi-plus" class="p-button-outlined">
+                    </p-button>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="name">Id <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="type">Type <p-sortIcon field="name"></p-sortIcon></th>
+
+                    <th pSortableColumn="value">Amount <p-sortIcon field="value"></p-sortIcon></th>
+                    <th pSortableColumn="unit">Unit <p-sortIcon field="unit"></p-sortIcon></th>
+                    <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-measurement>
+                <tr>
+                    <td>{{measurement.id}}</td>
+                    <td>{{measurement.type}}</td>
+                    <td>{{measurement.amount}}</td>
+                    <td>{{measurement.unit}}</td>
+                    <td>{{measurement.timestamp}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
