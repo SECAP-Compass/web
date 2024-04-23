@@ -1,0 +1,65 @@
+<div>
+    <p-table #measurementTable [value]="measurements" dataKey="name" [rows]="10"
+             [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h4 class="card-title">Measurements</h4>
+                <p-button label="New Measurement" icon="pi pi-plus" class="p-button-outlined" (click)="onAddMeasurement()">
+                </p-button>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="name">Id <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="type">Type <p-sortIcon field="name"></p-sortIcon></th>
+
+                <th pSortableColumn="value">Amount <p-sortIcon field="value"></p-sortIcon></th>
+                <th pSortableColumn="unit">Unit <p-sortIcon field="unit"></p-sortIcon></th>
+                <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-measurement>
+            <tr>
+                <td>{{measurement.id}}</td>
+                <td>{{measurement.type}}</td>
+                <td>{{measurement.amount}}</td>
+                <td>{{measurement.unit}}</td>
+                <td>{{measurement.timestamp}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <ng-template [ngIf]="createDialog">
+        <p-dialog header="Create Measurement" [(visible)]="createDialog" [modal]="true" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw', height:'32vw'  }">
+
+            <form [formGroup]="createMeasurementForm" class="p-fluid">
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <label for="type" class="p-d-block">Type</label>
+                        <p-dropdown id="type" [options]="measurementTypes" formControlName="type" class="p-d-block"/>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <label for="timestamp" class="p-d-block">Timestamp</label>
+                        <p-calendar id="timestamp" formControlName="timestamp" [showTime]="true" [showSeconds]="true" [showIcon]="true" class="p-d-block"></p-calendar>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <label for="amount" class="p-d-block">Amount</label>
+                        <p-inputNumber id="amount" inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5" formControlName="amount" class="p-d-block"></p-inputNumber>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <label for="unit" class="p-d-block">Unit</label>
+                        <p-dropdown id="unit" [options]="units" type="text" formControlName="unit" class="p-d-block"/>
+                    </div>
+                </div>
+            </form>
+
+            <ng-template pTemplate="footer">
+                <button pButton icon="pi pi-check" (click)="onClickSubmit()" label="Submit" class="p-button-outlined"></button>
+            </ng-template>
+        </p-dialog>
+    </ng-template>
+</div>
+

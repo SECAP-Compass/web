@@ -52,5 +52,9 @@ export class ResidentialListComponent implements OnInit {
     onRowSelect(building: Building) {
         this.router.navigate([building.id], { relativeTo: this.activatedRoute });
     }
+
+    onNew() {
+        this.router.navigate(['new'], { relativeTo: this.activatedRoute });
+    }
 }
 

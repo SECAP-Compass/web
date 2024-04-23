@@ -14,6 +14,7 @@ import { SliderModule } from 'primeng/slider';
 import { ToastModule } from 'primeng/toast';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ResidentialDetailComponent } from './residential-detail.component';
+import {MeasurementTableComponent} from "../common/components/measurement-table/measurement-table.component";
 
 @NgModule({
     declarations: [ResidentialDetailComponent],
@@ -32,8 +33,9 @@ import { ResidentialDetailComponent } from './residential-detail.component';
         ProgressBarModule,
         ToastModule,
         RouterModule.forChild([
-            { path: '', component: ResidentialDetailComponent },
+            {path: '', component: ResidentialDetailComponent},
         ]),
+        MeasurementTableComponent,
     ],
 })
 export class ResidentialDetailModule {}

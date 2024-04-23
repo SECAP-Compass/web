@@ -25,7 +25,11 @@ export class ResidentialDetailComponent implements OnInit {
     ngOnInit() {
         const id = parseInt(this.route.snapshot.paramMap.get('id'));
         this.building = this.residentialService.getBuilding(id);
-        this.consumption = this.residentialService.getConsumption(id);
-        this.measurements = this.residentialService.getMeasurements(id);
+        this.residentialService.getConsumption(id).subscribe(
+            c => this.consumption = c
+        );
+        this.residentialService.getMeasurements(id).subscribe(
+            m => this.measurements = m
+        );
     }
 }

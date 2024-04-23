@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseHttpService } from './base-http.service';
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 @Injectable({
     providedIn: 'root',
@@ -36,12 +38,14 @@ export class DataService extends BaseHttpService {
         );
         return this.httpDelete(url, headers);
     }
-    get<T>(url: string, params?: HttpParams) {
+    get<T>(url: string, params?: HttpParams): Observable<T> {
         let headers = new HttpHeaders();
         headers = headers.append(
             'Authorization',
             'Bearer ' + localStorage.getItem('access_token')
         );
-        return this.httpGet<T>(url, headers, params);
+        return this.httpGet<T>(url, headers, params).pipe(
+            map(response => JSON.parse(JSON.stringify(response.body)))
+        );
     }
 }

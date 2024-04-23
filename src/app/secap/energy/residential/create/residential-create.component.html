@@ -1,0 +1,46 @@
+<div class="col-12">
+    <div class="card">
+        <form [formGroup]="residentialCreateForm">
+            <div class="card-header">
+                <div class="flex flex-wrap gap-3 align-content-around justify-content-between">
+                    <h4 class="card-title">Create Building</h4>
+                    <button pButton type="button" label="Save" class="p-button-success lg:right-auto"  [disabled]="residentialCreateForm.invalid"></button>
+
+                </div>
+            </div>
+
+            <div class="p-fluid formgrid grid">
+                <div class="field col-6 md:gap-6">
+                    <label htmlFor="name">Name</label>
+                    <input pInputText id="name" type="text" formControlName="name" />
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label htmlFor="area">Area</label>
+                    <p-inputNumber id="area" inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"  formControlName="area" />
+                </div>
+                <div class="field col-12 md:col-1">
+                    <label htmlFor="unit">Unit</label>
+                    <p-dropdown [options]="units" formControlName="areaUnit" />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label htmlFor="city">City</label>
+                    <p-dropdown [options]="[city]" formControlName="city" optionLabel="name" optionValue="id" [disabled]="true" />
+                </div>
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="state">District</label>
+                    <p-dropdown [options]="districts" optionLabel="name" optionValue="id"/>
+                </div>
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="neighborhood">Neighborhood</label>
+                    <input pInputText id="neighborhood" type="text" formControlName="neighborhood" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+             <app-measurement-table [measurements]="measurements" ></app-measurement-table>
+        </div>
+    </div>
+</div>

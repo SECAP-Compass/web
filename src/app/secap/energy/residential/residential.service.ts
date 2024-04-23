@@ -1,8 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import { DataService } from '../../shared/service/data.service';
 import { Building } from './common/building.model';
 import { Consumption } from './common/consumption.model';
-import { Measurement, MeasurementType } from './common/measurement.model';
+import { Measurement } from './common/measurement.model';
+import {MeasurementService} from "../../shared/measurement/measurement.service";
+import {BehaviorSubject, Observable, of} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root',
@@ -75,16 +78,22 @@ export class ResidentialService {
         },
     ];
 
-    consumptions = new Map<number, Consumption>();
-    measurements = new Map<number, Measurement[]>();
+    private consumptionsSubject: BehaviorSubject<Record<number, Consumption>> = new BehaviorSubject({});
+    private measurementsSubject: BehaviorSubject<Record<number, Measurement[]>> = new BehaviorSubject({});
 
-    constructor(private dataService: DataService) {
-        this.buildings.forEach((building) => {
-            this.generateMockConsumption(building.id);
-            this.generateMockMeasurements(building.id);
+    consumptions : Record<number, Consumption> = {};
+    measurements : Record<number, Measurement[]> = {};
+
+    types: string[];
+
+    constructor(private measurementService: MeasurementService) {
+        this.measurementService.getMeasurementTypes().subscribe((types) => {
+            this.types = types;
+            this.buildings.forEach((building) => {
+                this.generateMockConsumption(building.id);
+                this.generateMockMeasurements(building.id);
+            });
         });
-
-
     }
 
     getBuildings(): Building[] {
@@ -95,13 +104,16 @@ export class ResidentialService {
         return this.buildings.find((building) => building.id === id);
     }
 
-    getConsumption(id: number): Consumption {
-        const x = this.consumptions.get(id);
-        return x;
+    getConsumption(id: number): Observable<Consumption> {
+        return this.consumptionsSubject.asObservable().pipe(map(consumptions => consumptions[id]));
     }
 
-    getMeasurements(id: number) {
-        return this.measurements.get(id);
+    getMeasurements(id: number): Observable<Measurement[]> {
+        return this.measurementsSubject.asObservable().pipe(map(measurements => measurements[id]));
+    }
+
+    getTypes(): string[] {
+        return this.types;
     }
 
     private generateMockConsumption(id: number) {
@@ -111,14 +123,14 @@ export class ResidentialService {
             Heating: Math.floor(Math.random() * 10000) + 1,
             Unit: 'MWh',
         };
-        this.consumptions.set(id, consumption);
+        this.consumptions[id] = consumption;
+        this.consumptionsSubject.next(this.consumptions);
     }
 
     private generateMockMeasurements(id: number) {
         const measurements: Measurement[] = [];
 
         for (let i = 0; i < 100; i++) {
-            const types = Object.values(MeasurementType);
             const units = ['kWh', 'mWh', 'Wh'];
             const measurement: Measurement = {
                 id: i,
@@ -126,10 +138,11 @@ export class ResidentialService {
                 amount: Math.floor(Math.random() * 100) + 1,
                 unit: units[Math.floor(Math.random() * units.length)],
                 timestamp: new Date().toISOString(),
-                type: types[Math.floor(Math.random() * types.length)],
+                type: this.types[Math.floor(Math.random() * this.types.length)],
             };
             measurements.push(measurement);
         }
-        this.measurements.set(id, measurements);
+        this.measurements[id] = measurements;
+        this.measurementsSubject.next(this.measurements);
     }
 }
