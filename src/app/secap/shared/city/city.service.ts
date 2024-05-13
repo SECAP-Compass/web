@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 })
 export class CityService {
 
-    cityBaseUrl: string = 'http://localhost:8080/cities/';
+    cityBaseUrl: string = 'http://localhost:5173/cities/';
 
     constructor(private dataService: DataService) {
 

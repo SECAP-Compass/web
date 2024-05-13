@@ -6,14 +6,17 @@ import {Injectable} from "@angular/core";
     providedIn: 'root'
 })
 export class MeasurementService {
-    measurementBaseUrl: string = 'http://localhost:8080/measurements/';
+    measurementBaseUrl: string = 'http://localhost:5173/buildings/measurement-types/';
 
     constructor(private dataService: DataService) {
 
     }
 
-    getMeasurementTypes(): Observable<string[]> {
-        return this.dataService.get<string[]>(this.measurementBaseUrl + 'types')
+    getMeasurementTypeHeaders(): Observable<Map<string, string[]>> {
+        return this.dataService.get<Map<string, string[]>>(this.measurementBaseUrl)
     }
 
+    getMeasurementType(header: string): Observable<string[]> {
+        return this.dataService.get<string[]>(this.measurementBaseUrl + header)
+    }
 }

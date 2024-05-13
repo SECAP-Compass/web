@@ -22,7 +22,6 @@
                             <td>{{building.province}}</td>
                             <td>{{building.district}}</td>
                             <td>{{building.neighbourhood}}</td>
-                            <td>{{building.energy}}</td>
                         </tr>
                     </ng-template>
 
@@ -38,21 +37,19 @@
 
                     <ng-template pTemplate="header">
                         <tr>
-                            <th pSortableColumn="name" >Name <p-sortIcon field="name"></p-sortIcon></th>
+                            <th pSortableColumn="id" >Id<p-sortIcon field="id"></p-sortIcon></th>
                             <th>Province</th>
                             <th>District</th>
-                            <th>Neighbourhood</th>
-                            <th>Energy</th>
+                            <th>Country</th>
                         </tr>
                     </ng-template>
 
                     <ng-template pTemplate="body" let-building>
                         <tr                 (click)="onRowSelect(building)">
-                            <td>{{building.name}}</td>
-                            <td>{{building.province}}</td>
-                            <td>{{building.district}}</td>
-                            <td>{{building.neighbourhood}}</td>
-                            <td>{{building.energy}}</td>
+                            <td>{{building.id}}</td>
+                            <td>{{building.address.province}}</td>
+                            <td>{{building.address.district}}</td>
+                            <td>{{building.address.country}}</td>
                         </tr>
 
                     </ng-template>

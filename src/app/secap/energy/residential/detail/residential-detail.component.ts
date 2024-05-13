@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Building } from '../common/building.model';
-import { ResidentialService } from '../residential.service';
+import { ResidentialService } from '../common/service/residential.service';
 import { Consumption } from '../common/consumption.model';
 import { Measurement } from '../common/measurement.model';
 
@@ -12,7 +12,7 @@ import { Measurement } from '../common/measurement.model';
 })
 export class ResidentialDetailComponent implements OnInit {
     id: string;
-    building: Building;
+    building: Building = null;
     consumption: Consumption;
     measurements: Measurement[] = [];
     loading: boolean = false;
@@ -23,13 +23,10 @@ export class ResidentialDetailComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        const id = parseInt(this.route.snapshot.paramMap.get('id'));
-        this.building = this.residentialService.getBuilding(id);
-        this.residentialService.getConsumption(id).subscribe(
-            c => this.consumption = c
-        );
-        this.residentialService.getMeasurements(id).subscribe(
-            m => this.measurements = m
+        const id = this.route.snapshot.paramMap.get('id');
+
+        this.residentialService.getBuilding(id).subscribe(
+            b => this.building = b
         );
     }
 }

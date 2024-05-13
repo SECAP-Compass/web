@@ -12,29 +12,35 @@ export class DataService extends BaseHttpService {
         super(httpClient);
     }
 
-    create<T>(resource, url: string, params?: HttpParams) {
+    private token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzZWNhcCIsImV4cCI6MTcxNTcwOTU5MCwianRpIjoiMzk3NmMxNDQtNzA4Zi00OTM4LTkyMDgtZDQ4MGU4ZjRjZjdmIiwiaWF0IjoxNzE1NjIzMTkwLCJpc3MiOiJzZWNhcC1hdXRoIiwic3ViIjoiZTF2cmVuMTMxMkBtYWlsLmNvbSIsImNpdHlJZCI6MzQsImNpdHkiOiJpc3RhbmJ1bCIsInJvbGVzIjpbImJ1aWxkaW5nQWRtaW4iXSwiYXV0aG9yaXR5IjoiaXN0YW5idWwifQ.W9csLYvjeJx0lRe2mJVKsKQq-1Jwjxgchkz-Ru8iSJ8';
+
+    post<T>(resource, url: string, params?: HttpParams): Observable<T> {
         let headers = new HttpHeaders();
         headers = headers.append(
             'Authorization',
-            'Bearer ' + localStorage.getItem('access_token')
+            this.token,
         );
-        return this.httpPost<T>(url, resource, headers, params);
+        return this.httpPost<T>(url, resource, headers, params).pipe(
+            map(response => JSON.parse(JSON.stringify(response.body)))
+        );
     }
 
-    update<T>(resource, url: string, params?: HttpParams) {
+    update<T>(resource, url: string, params?: HttpParams): Observable<T>{
         let headers = new HttpHeaders();
         headers = headers.append(
             'Authorization',
-            'Bearer ' + localStorage.getItem('access_token')
+            this.token,
         );
-        return this.httpPatch(url, resource, headers, params);
+        return this.httpPatch(url, resource, headers, params).pipe(
+            map(response => JSON.parse(JSON.stringify(response.body)))
+        );
     }
 
     delete<T>(url: string) {
         let headers = new HttpHeaders();
         headers = headers.append(
             'Authorization',
-            'Bearer ' + localStorage.getItem('access_token')
+            this.token,
         );
         return this.httpDelete(url, headers);
     }
@@ -42,7 +48,7 @@ export class DataService extends BaseHttpService {
         let headers = new HttpHeaders();
         headers = headers.append(
             'Authorization',
-            'Bearer ' + localStorage.getItem('access_token')
+            this.token,
         );
         return this.httpGet<T>(url, headers, params).pipe(
             map(response => JSON.parse(JSON.stringify(response.body)))

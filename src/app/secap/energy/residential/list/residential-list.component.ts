@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { Building } from '../common/building.model';
-import { ResidentialService } from '../residential.service';
+import { ResidentialService } from '../common/service/residential.service';
+import {map} from "rxjs/operators";
 
 
 @Component({
@@ -12,13 +13,6 @@ import { ResidentialService } from '../residential.service';
 })
 export class ResidentialListComponent implements OnInit {
     loading: boolean = false;
-
-    filter: any = {
-        name: '',
-        district: '',
-        province: '',
-        neighbourhood: '',
-    };
 
     buildings: Building[] = [];
     constructor(
@@ -30,7 +24,12 @@ export class ResidentialListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.buildings = this.residentialService.getBuildings();
+        this.residentialService.getBuildings().pipe(
+            map((page) => page.content)
+        ).subscribe((buildings) => {
+            this.buildings = buildings;
+        }
+        )
     }
 
     applyFilter() {
@@ -46,7 +45,6 @@ export class ResidentialListComponent implements OnInit {
 
     clear(table: Table) {
         table.clear();
-        this.filter.nativeElement.value = '';
     }
 
     onRowSelect(building: Building) {

@@ -35,25 +35,39 @@ export class MeasurementTableComponent implements OnInit {
 
     @Input() measurements: Measurement[];
     createDialog: boolean = false;
-    createMeasurementForm: FormGroup;
-    measurementTypes: string[];
+    createMeasurementForm  = new FormGroup({
+        typeHeader: new FormControl<string>(null, Validators.required),
+        type: new FormControl<string>(null, Validators.required),
+        amount: new FormControl<number>(null, Validators.required),
+        unit: new FormControl<string>(null, Validators.required),
+        timestamp: new FormControl<Date>(null, Validators.required)
+    });
+
+
+    measurementTypeHeaders: string[] = []
+    measurementTypes: string[] = [];
+    mtMap: Map<string, string[]> = new Map<string, string[]>();
 
     units: string[] = ['kWh', 'm3', 'lt', 'kg', 'ton', 'm2', 'm3', 'm', 'cm', 'mm', 'lt'];
 
     constructor(private measurementService: MeasurementService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+
+    }
 
     onAddMeasurement() {
-        this.measurementService.getMeasurementTypes().subscribe({
+        this.measurementService.getMeasurementTypeHeaders().subscribe({
             next: measurementTypes => {
-                this.measurementTypes = measurementTypes;
+                this.mtMap = measurementTypes;
             },
             error: error => {
                 console.error('Error:', error);
             },
             complete: () => {
-                this.initForm();
+                this.measurementTypeHeaders = Object.keys(this.mtMap);
+                this.measurementTypes = this.mtMap[this.measurementTypeHeaders[0]];
+                this.initForm()
             }
         });
 
@@ -61,15 +75,35 @@ export class MeasurementTableComponent implements OnInit {
     }
 
     onClickSubmit() {
+        this.createMeasurementForm.get('type')
+        let measurement: Measurement = {
+            buildingId: 1,
+            amount: this.createMeasurementForm.get('amount').value,
+            unit: this.createMeasurementForm.get('unit').value,
+            timestamp: this.createMeasurementForm.get('timestamp').value.toISOString(),
+            type: this.createMeasurementForm.get('type').value,
+            typeHeader: this.createMeasurementForm.get('typeHeader').value
+        }
+
+        this.measurements.push(measurement)
         this.createDialog = false;
     }
 
+    onHeaderChange(event: any){
+        this.measurementTypes = this.mtMap[event.value];
+        this.createMeasurementForm.patchValue({
+            type: this.measurementTypes[0],
+            typeHeader: event.value
+        })
+    }
+
     private initForm() {
-        this.createMeasurementForm = new FormGroup({
-            type: new FormControl(this.measurementTypes[0], Validators.required),
-            amount: new FormControl(null, Validators.required),
-            unit: new FormControl(this.units[0], Validators.required),
-            timestamp: new FormControl(null, Validators.required)
-        });
+        this.createMeasurementForm.patchValue({
+            typeHeader: this.measurementTypeHeaders[0],
+            type: this.measurementTypes[0],
+            unit: this.units[0],
+            amount: 0,
+            timestamp: new Date()
+        })
     }
 }
