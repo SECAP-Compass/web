@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable, numberAttribute, OnInit} from '@angular/core';
 import { DataService } from '../../../../shared/service/data.service';
 import { Building } from '../building.model';
 import { Consumption } from '../consumption.model';
@@ -8,6 +8,7 @@ import {BehaviorSubject, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {Page} from "../../../../shared/model/page.model";
 import {CreateResidentialRequest} from "./residential.request.model";
+import {HttpParams} from "@angular/common/http";
 
 @Injectable({
     providedIn: 'root',
@@ -50,8 +51,26 @@ export class ResidentialService {
         return this.measurementsSubject.asObservable().pipe(map(measurements => measurements[id]));
     }
 
-    getTypes(): string[] {
-        return this.types;
+    getBuildingTypes(): Observable<string[]> {
+        return of(["Residential", "Commercial", "Industrial"])
+    }
+
+    getBuildingsFilter(selectedType: string, cityId: number, districtId: number): Observable<Page<Building>>{
+        const url = `${this.buildingsBaseURL}/filter`;
+
+        let params = new HttpParams();
+
+        if (selectedType) {
+            params = params.set('type', selectedType);
+        }
+        if (cityId) {
+            params = params.set('cityId', cityId.toString());
+        }
+        if (districtId) {
+            params = params.set('districtId', districtId.toString());
+        }
+
+        return this.dataService.get<Page<Building>>(url, params);
     }
 
     private generateMockConsumption(id: number) {

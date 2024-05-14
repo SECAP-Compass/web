@@ -12,7 +12,7 @@ export class DataService extends BaseHttpService {
         super(httpClient);
     }
 
-    private token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzZWNhcCIsImV4cCI6MTcxNTcwOTU5MCwianRpIjoiMzk3NmMxNDQtNzA4Zi00OTM4LTkyMDgtZDQ4MGU4ZjRjZjdmIiwiaWF0IjoxNzE1NjIzMTkwLCJpc3MiOiJzZWNhcC1hdXRoIiwic3ViIjoiZTF2cmVuMTMxMkBtYWlsLmNvbSIsImNpdHlJZCI6MzQsImNpdHkiOiJpc3RhbmJ1bCIsInJvbGVzIjpbImJ1aWxkaW5nQWRtaW4iXSwiYXV0aG9yaXR5IjoiaXN0YW5idWwifQ.W9csLYvjeJx0lRe2mJVKsKQq-1Jwjxgchkz-Ru8iSJ8';
+    private token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzZWNhcCIsImV4cCI6MTcxNTc5Nzk2MiwianRpIjoiOGEyMjJiMzItZjgyNS00OGNkLThlNzAtNjZjOTQzNDY4YzZhIiwiaWF0IjoxNzE1NzExNTYyLCJpc3MiOiJzZWNhcC1hdXRoIiwic3ViIjoiZTF2cmVuMTMxMkBtYWlsLmNvbSIsImNpdHlJZCI6MzQsImNpdHkiOiJpc3RhbmJ1bCIsInJvbGVzIjpbImJ1aWxkaW5nQWRtaW4iXSwiYXV0aG9yaXR5IjoiaXN0YW5idWwifQ.2AFE00107ccrtkmBdQMrmhzQC5-kbKtqIaRHndbjBpQ';
 
     post<T>(resource, url: string, params?: HttpParams): Observable<T> {
         let headers = new HttpHeaders();

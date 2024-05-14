@@ -4,6 +4,8 @@ import { Table } from 'primeng/table';
 import { Building } from '../common/building.model';
 import { ResidentialService } from '../common/service/residential.service';
 import {map} from "rxjs/operators";
+import {CityModel, District} from "../../../shared/city/city.model";
+import {CityService} from "../../../shared/city/city.service";
 
 
 @Component({
@@ -13,12 +15,21 @@ import {map} from "rxjs/operators";
 })
 export class ResidentialListComponent implements OnInit {
     loading: boolean = false;
+    selectedType: string = null;
+
+    types: string[] = [];
+
+    cities: CityModel[] = []
+    districts: District[] = []
+    selectedCity: CityModel = null;
+    selectedDistrict: District = null;
 
     buildings: Building[] = [];
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private residentialService: ResidentialService
+        private residentialService: ResidentialService,
+        private cityService: CityService
     ) {
         // Constructor logic
     }
@@ -28,22 +39,36 @@ export class ResidentialListComponent implements OnInit {
             map((page) => page.content)
         ).subscribe((buildings) => {
             this.buildings = buildings;
-        }
+            }
         )
+
+        this.residentialService.getBuildingTypes().subscribe((types) => {
+            this.types = types;
+        })
+
+        this.cityService.getCityById(34).subscribe((city) => {
+            this.cities = [city];
+            this.selectedCity = city;
+            this.districts = Object.values(city.districts);
+        })
+
     }
 
     applyFilter() {
-        // Filter logic
-    }
+        console.log(this.selectedType, this.selectedCity, this.selectedDistrict)
 
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal(
-            (event.target as HTMLInputElement).value,
-            'contains'
-        );
+        this.residentialService.getBuildingsFilter(
+            this.selectedType,
+            this.selectedCity.id,
+            this.selectedDistrict ? this.selectedDistrict.id : null
+        ).subscribe((buildings) => {
+            this.buildings = buildings.content;
+        })
     }
 
     clear(table: Table) {
+        this.selectedType = null;
+        this.selectedDistrict = null;
         table.clear();
     }
 

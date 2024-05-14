@@ -25,15 +25,41 @@
                         </tr>
                     </ng-template>
 
-                    <!-- <ng-template pTemplate="caption">
+                    <ng-template pTemplate="caption">
                         <div class="flex justify-content-between flex-column sm:flex-row">
-                            <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(buildingTable)"></button>
-                            <span class="p-input-icon-left mb-2">
-                                <i class="pi pi-search"></i>
-                                <input pInputText type="text" #filter (input)="onGlobalFilter(buildingTable, $event)" placeholder="Search Keyword" class="w-full"/>
+                            <span>
+                                <p-dropdown
+                                    class="mr-2"
+                                    [options]="types"
+                                    [(ngModel)]="selectedType"
+                                    placeholder="Select Type"
+                                />
+                                <p-dropdown
+                                    class="mr-2"
+                                    [options]="cities"
+                                    [(ngModel)]="selectedCity"
+                                    optionLabel="name"
+                                    placeholder="Select City"
+                                />
+                                <p-dropdown
+                                    class="mr-2"
+                                    [options]="districts"
+                                    [(ngModel)]="selectedDistrict"
+                                    optionLabel="name"
+                                    placeholder="Select District"
+                                />
                             </span>
+
+                            <span class="p-input-icon-left mb-2">
+                                <button pButton label="Clear" class="p-button-outlined ml-2 mb-2" icon="pi pi-filter-slash" (click)="clear(buildingTable)"></button>
+                                <button pButton label="Search" class="p-button-outlined ml-2 mb-2" icon="pi pi-filter" (click)="applyFilter()"></button>
+                            </span>
+<!--                            <span class="p-input-icon-left mb-2">-->
+<!--                                <i class="pi pi-search"></i>-->
+<!--                                <input pInputText type="text" #filter (input)="onGlobalFilter(buildingTable, $event)" placeholder="Search Keyword" class="w-full"/>-->
+<!--                            </span>-->
                         </div>
-                    </ng-template> -->
+                    </ng-template>
 
                     <ng-template pTemplate="header">
                         <tr>
