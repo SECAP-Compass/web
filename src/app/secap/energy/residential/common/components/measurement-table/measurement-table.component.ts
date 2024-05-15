@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ButtonModule} from "primeng/button";
 import {SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
@@ -34,6 +34,8 @@ import {DropdownModule} from "primeng/dropdown";
 export class MeasurementTableComponent implements OnInit {
 
     @Input() measurements: Measurement[];
+    @Output() measurementsChange = new EventEmitter<Measurement>();
+
     createDialog: boolean = false;
     createMeasurementForm  = new FormGroup({
         typeHeader: new FormControl<string>(null, Validators.required),
@@ -48,7 +50,7 @@ export class MeasurementTableComponent implements OnInit {
     measurementTypes: string[] = [];
     mtMap: Map<string, string[]> = new Map<string, string[]>();
 
-    units: string[] = ['kWh', 'm3', 'lt', 'kg', 'ton', 'm2', 'm3', 'm', 'cm', 'mm', 'lt'];
+    units: string[] = [];
 
     constructor(private measurementService: MeasurementService) {}
 
@@ -71,6 +73,16 @@ export class MeasurementTableComponent implements OnInit {
             }
         });
 
+
+        this.measurementService.getMeasurementUnits().subscribe({
+            next: units => {
+                this.units = units.measurementUnits;
+            },
+            error: error => {
+                console.error('Error:', error);
+            }
+        });
+
         this.createDialog = true;
     }
 
@@ -86,6 +98,7 @@ export class MeasurementTableComponent implements OnInit {
         }
 
         this.measurements.push(measurement)
+        this.measurementsChange.emit(measurement);
         this.createDialog = false;
     }
 

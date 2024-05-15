@@ -1,6 +1,10 @@
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title">Building info</h4>
+        <span class="justify-content-between flex">
+            <h4 class="card-title">Building info</h4>
+
+            <button pButton pRipple class="p-button-success mb-3" label="Save" [disabled]="saveButtonDisabled" (click)="onSave()" ></button>
+        </span>
     </div>
     <div class="card-body p-d-flex p-jc-around p-ai-center">
         <div class="grid">
@@ -26,6 +30,6 @@
 
 <div class="card">
     <div class="card-body">
-        <app-measurement-table [measurements]="measurements" ></app-measurement-table>
+        <app-measurement-table [measurements]="measurements" (measurementsChange)="onMeasurementsChange($event)" ></app-measurement-table>
     </div>
 </div>

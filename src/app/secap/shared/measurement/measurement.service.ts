@@ -1,6 +1,7 @@
 import {DataService} from "../service/data.service";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
+import {Measurement} from "../../energy/residential/common/measurement.model";
 
 @Injectable({
     providedIn: 'root'
@@ -18,5 +19,11 @@ export class MeasurementService {
 
     getMeasurementType(header: string): Observable<string[]> {
         return this.dataService.get<string[]>(this.measurementBaseUrl + header)
+    }
+
+    getMeasurementUnits() {
+        return this.dataService.get<{
+            measurementUnits: string[]
+        }>('http://localhost:5173/buildings/measurement-units')
     }
 }

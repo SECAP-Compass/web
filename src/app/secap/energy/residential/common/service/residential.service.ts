@@ -73,6 +73,22 @@ export class ResidentialService {
         return this.dataService.get<Page<Building>>(url, params);
     }
 
+    addMeasurements(buildingId: number, measurements: Measurement[]) {
+        return this.dataService.post({measurements: measurements}, `http://localhost:5173/buildings/${buildingId}/measurements`)
+    }
+
+    getBuildingMeasurements(buildingId: string): Observable<Page<{
+        id: string
+        createdBy: string
+        measurement: Measurement
+    }>> {
+        return this.dataService.get<Page<{
+            id: string
+            createdBy: string
+            measurement: Measurement
+        }>>(`http://localhost:5173/buildings/${buildingId}/measurements`);
+    }
+
     private generateMockConsumption(id: number) {
         const consumption: Consumption = {
             Electricity: Math.floor(Math.random() * 10000) + 1,
