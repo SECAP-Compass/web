@@ -18,6 +18,7 @@ export class ResidentialDetailComponent implements OnInit {
     building: Building = null;
     consumption: Consumption;
     measurements: Measurement[] = [];
+    uncommitedMeasurements: Measurement[] = [];
 
     saveButtonDisabled: boolean = true;
 
@@ -28,13 +29,15 @@ export class ResidentialDetailComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        const id = this.route.snapshot.paramMap.get('id');
+        this.id = this.route.snapshot.paramMap.get('id');
 
-        this.residentialService.getBuilding(id).subscribe(
-            b => this.building = b
+        this.residentialService.getBuilding(this.id).subscribe(
+            b => {
+                this.building = b
+            }
         );
 
-        this.residentialService.getBuildingMeasurements(id).subscribe(
+        this.residentialService.getBuildingMeasurements(this.id).subscribe(
             value => {
                 this.measurements = value.content.map(it => it.measurement);
             }
@@ -42,11 +45,13 @@ export class ResidentialDetailComponent implements OnInit {
     }
 
     onMeasurementsChange(measurements: Measurement) {
+        this.uncommitedMeasurements.push(measurements);
+        this.measurements.push(measurements);
         this.saveButtonDisabled = false;
     }
 
     onSave() {
-        this.residentialService.addMeasurements(this.building.id, this.measurements).subscribe({
+        this.residentialService.addMeasurements(this.id, this.uncommitedMeasurements).subscribe({
             next: () => {
                 this.saveButtonDisabled = true;
             },

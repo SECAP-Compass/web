@@ -7,7 +7,7 @@ import {Measurement} from "../../energy/residential/common/measurement.model";
     providedIn: 'root'
 })
 export class MeasurementService {
-    measurementBaseUrl: string = 'http://localhost:5173/buildings/measurement-types/';
+    measurementBaseUrl: string = 'buildings/measurement-types/';
 
     constructor(private dataService: DataService) {
 
@@ -24,6 +24,6 @@ export class MeasurementService {
     getMeasurementUnits() {
         return this.dataService.get<{
             measurementUnits: string[]
-        }>('http://localhost:5173/buildings/measurement-units')
+        }>('buildings/measurement-units')
     }
 }

@@ -22,7 +22,7 @@ export class ResidentialService {
     measurements : Record<number, Measurement[]> = {};
 
     types: string[];
-    buildingsBaseURL = 'http://localhost:5173/buildings';
+    buildingsBaseURL = 'buildings';
 
     constructor(
         private dataService: DataService,
@@ -30,8 +30,14 @@ export class ResidentialService {
     ) {
     }
 
-    createBuilding(building: CreateResidentialRequest): Observable<Building> {
-        return this.dataService.post<Building>(building, this.buildingsBaseURL);
+    createBuilding(building: CreateResidentialRequest): Observable<{
+        message: string,
+        aggregateId: string
+    }> {
+        return this.dataService.post<{
+            message: string,
+            aggregateId: string
+        }>(building, this.buildingsBaseURL);
     }
 
     getBuildings(): Observable<Page<Building>> {
@@ -55,7 +61,7 @@ export class ResidentialService {
         return of(["Residential", "Commercial", "Industrial"])
     }
 
-    getBuildingsFilter(selectedType: string, cityId: number, districtId: number): Observable<Page<Building>>{
+    getBuildingsFilter(selectedType: string, cityId: number, districtId: number, page: number, size: number): Observable<Page<Building>>{
         const url = `${this.buildingsBaseURL}/filter`;
 
         let params = new HttpParams();
@@ -69,12 +75,18 @@ export class ResidentialService {
         if (districtId) {
             params = params.set('districtId', districtId.toString());
         }
+        if (page){
+            params = params.set('page', page.toString());
+        }
+        if (size) {
+            params = params.set('size', size.toString());
+        }
 
         return this.dataService.get<Page<Building>>(url, params);
     }
 
-    addMeasurements(buildingId: number, measurements: Measurement[]) {
-        return this.dataService.post({measurements: measurements}, `http://localhost:5173/buildings/${buildingId}/measurements`)
+    addMeasurements(buildingId: string, measurements: Measurement[]) {
+        return this.dataService.post({measurements: measurements}, `buildings/${buildingId}/measurements`)
     }
 
     getBuildingMeasurements(buildingId: string): Observable<Page<{
@@ -86,7 +98,8 @@ export class ResidentialService {
             id: string
             createdBy: string
             measurement: Measurement
-        }>>(`http://localhost:5173/buildings/${buildingId}/measurements`);
+            timestamp: Date
+        }>>(`buildings/${buildingId}/measurements`);
     }
 
     private generateMockConsumption(id: number) {
@@ -107,11 +120,11 @@ export class ResidentialService {
             const units = ['kWh', 'mWh', 'Wh'];
             const measurement: Measurement = {
                 buildingId: id,
-                amount: Math.floor(Math.random() * 100) + 1,
+                value: Math.floor(Math.random() * 100) + 1,
                 unit: units[Math.floor(Math.random() * units.length)],
                 timestamp: new Date().toISOString(),
-                type: this.types[Math.floor(Math.random() * this.types.length)],
-                typeHeader: 'Electricity',
+                measurementType: this.types[Math.floor(Math.random() * this.types.length)],
+                measurementTypeHeader: 'Electricity',
             };
             measurements.push(measurement);
         }

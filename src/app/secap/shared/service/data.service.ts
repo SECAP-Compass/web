@@ -8,50 +8,45 @@ import {Observable} from "rxjs";
     providedIn: 'root',
 })
 export class DataService extends BaseHttpService {
+
+    baseUrl = "http://localhost:5173/";
+
     constructor(httpClient: HttpClient) {
         super(httpClient);
     }
 
-    private token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzZWNhcCIsImV4cCI6MTcxNTc5Nzk2MiwianRpIjoiOGEyMjJiMzItZjgyNS00OGNkLThlNzAtNjZjOTQzNDY4YzZhIiwiaWF0IjoxNzE1NzExNTYyLCJpc3MiOiJzZWNhcC1hdXRoIiwic3ViIjoiZTF2cmVuMTMxMkBtYWlsLmNvbSIsImNpdHlJZCI6MzQsImNpdHkiOiJpc3RhbmJ1bCIsInJvbGVzIjpbImJ1aWxkaW5nQWRtaW4iXSwiYXV0aG9yaXR5IjoiaXN0YW5idWwifQ.2AFE00107ccrtkmBdQMrmhzQC5-kbKtqIaRHndbjBpQ';
+    private token =
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzZWNhcCIsImV4cCI6MTcxNjA2NzI3OCwianRpIjoiMDJkYzFlNDItOTZhZi00MDE5LThlOTQtYWM5ZGM1NzQzYzgyIiwiaWF0IjoxNzE1OTgwODc4LCJpc3MiOiJzZWNhcC1hdXRoIiwic3ViIjoiZXZyZW5AbWFpbC5jb20iLCJjaXR5SWQiOjM0LCJjaXR5IjoiaXN0YW5idWwiLCJyb2xlcyI6WyJidWlsZGluZ0FkbWluIl0sImF1dGhvcml0eSI6ImlzdGFuYnVsIn0.W3zXJHY72AvJE0L-T4QpIEJAmY96-UiKkgQf0leey0g';
 
-    post<T>(resource, url: string, params?: HttpParams): Observable<T> {
+    post<T>(resource, path: string, params?: HttpParams): Observable<T> {
         let headers = new HttpHeaders();
-        headers = headers.append(
-            'Authorization',
-            this.token,
-        );
+        headers = headers.append('Authorization', this.token);
+
+        let url = this.baseUrl + path;
+
         return this.httpPost<T>(url, resource, headers, params).pipe(
-            map(response => JSON.parse(JSON.stringify(response.body)))
+            map((response) => JSON.parse(JSON.stringify(response.body)))
         );
     }
 
-    update<T>(resource, url: string, params?: HttpParams): Observable<T>{
+    update<T>(resource, path: string, params?: HttpParams): Observable<T> {
         let headers = new HttpHeaders();
-        headers = headers.append(
-            'Authorization',
-            this.token,
-        );
-        return this.httpPatch(url, resource, headers, params).pipe(
-            map(response => JSON.parse(JSON.stringify(response.body)))
+        headers = headers.append('Authorization', this.token);
+        return this.httpPatch(this.baseUrl + path, resource, headers, params).pipe(
+            map((response) => JSON.parse(JSON.stringify(response.body)))
         );
     }
 
-    delete<T>(url: string) {
+    delete<T>(path: string) {
         let headers = new HttpHeaders();
-        headers = headers.append(
-            'Authorization',
-            this.token,
-        );
-        return this.httpDelete(url, headers);
+        headers = headers.append('Authorization', this.token);
+        return this.httpDelete(this.baseUrl + path, headers);
     }
-    get<T>(url: string, params?: HttpParams): Observable<T> {
+    get<T>(path: string, params?: HttpParams): Observable<T> {
         let headers = new HttpHeaders();
-        headers = headers.append(
-            'Authorization',
-            this.token,
-        );
-        return this.httpGet<T>(url, headers, params).pipe(
-            map(response => JSON.parse(JSON.stringify(response.body)))
+        headers = headers.append('Authorization', this.token);
+        return this.httpGet<T>(this.baseUrl + path, headers, params).pipe(
+            map((response) => JSON.parse(JSON.stringify(response.body)))
         );
     }
 }

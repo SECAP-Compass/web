@@ -1,8 +1,8 @@
 export interface Measurement {
     buildingId: number;
-    amount: number;
+    value: number;
     unit: string;
     timestamp: string;
-    type: string;
-    typeHeader: string;
+    measurementType: string;
+    measurementTypeHeader: string;
 }

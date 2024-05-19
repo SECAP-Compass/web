@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { Building } from '../common/building.model';
 import { ResidentialService } from '../common/service/residential.service';
-import {map} from "rxjs/operators";
 import {CityModel, District} from "../../../shared/city/city.model";
 import {CityService} from "../../../shared/city/city.service";
 
@@ -24,6 +23,12 @@ export class ResidentialListComponent implements OnInit {
     selectedCity: CityModel = null;
     selectedDistrict: District = null;
 
+    page = 3;
+    totalPageCount = 0
+    totalRecords = 0;
+    rows = 10;
+    last = this.rows * this.page
+
     buildings: Building[] = [];
     constructor(
         private router: Router,
@@ -35,12 +40,7 @@ export class ResidentialListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.residentialService.getBuildings().pipe(
-            map((page) => page.content)
-        ).subscribe((buildings) => {
-            this.buildings = buildings;
-            }
-        )
+        this.getTableWithoutFilter()
 
         this.residentialService.getBuildingTypes().subscribe((types) => {
             this.types = types;
@@ -54,13 +54,20 @@ export class ResidentialListComponent implements OnInit {
 
     }
 
+    onLazyLoads(event: any){
+        this.rows = event.rows;
+        this.page = event.first;
+        this.applyFilter();
+    }
+
     applyFilter() {
-        console.log(this.selectedType, this.selectedCity, this.selectedDistrict)
 
         this.residentialService.getBuildingsFilter(
             this.selectedType,
             this.selectedCity.id,
-            this.selectedDistrict ? this.selectedDistrict.id : null
+            this.selectedDistrict ? this.selectedDistrict.id : null,
+            this.page,
+            this.rows,
         ).subscribe((buildings) => {
             this.buildings = buildings.content;
         })
@@ -69,7 +76,7 @@ export class ResidentialListComponent implements OnInit {
     clear(table: Table) {
         this.selectedType = null;
         this.selectedDistrict = null;
-        table.clear();
+        this.getTableWithoutFilter();
     }
 
     onRowSelect(building: Building) {
@@ -78,6 +85,19 @@ export class ResidentialListComponent implements OnInit {
 
     onNew() {
         this.router.navigate(['new'], { relativeTo: this.activatedRoute });
+    }
+
+    private getTableWithoutFilter(){
+        this.residentialService.getBuildings().subscribe((buildings) => {
+            this.page = buildings.number;
+            this.totalPageCount = buildings.totalPages;
+            this.totalRecords = buildings.totalElements;
+            this.buildings = buildings.content;
+
+            console.log(buildings);
+
+            }
+        )
     }
 }
 

@@ -43,7 +43,7 @@
 
     <div class="card">
         <div class="card-body">
-             <app-measurement-table [measurements]="measurements" ></app-measurement-table>
+             <app-measurement-table [measurements]="measurements" (measurementsChange)="onMeasurementsChange($event)" ></app-measurement-table>
         </div>
     </div>
 </div>

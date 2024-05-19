@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: secap-web
+    namespace: secap-compass
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: secap-web
+    template:
+        metadata:
+            labels:
+                app: secap-web
+        spec:
+            containers:
+                - name: secap-web
+                  image: secap-web:latest
+                  imagePullPolicy: IfNotPresent
+                  ports:
+                      - containerPort: 4200
+                        name: http
+                        protocol: TCP

@@ -34,7 +34,10 @@ import {DropdownModule} from "primeng/dropdown";
 export class MeasurementTableComponent implements OnInit {
 
     @Input() measurements: Measurement[];
+
     @Output() measurementsChange = new EventEmitter<Measurement>();
+
+    first = 9;
 
     createDialog: boolean = false;
     createMeasurementForm  = new FormGroup({
@@ -90,14 +93,13 @@ export class MeasurementTableComponent implements OnInit {
         this.createMeasurementForm.get('type')
         let measurement: Measurement = {
             buildingId: 1,
-            amount: this.createMeasurementForm.get('amount').value,
+            value: this.createMeasurementForm.get('amount').value,
             unit: this.createMeasurementForm.get('unit').value,
             timestamp: this.createMeasurementForm.get('timestamp').value.toISOString(),
-            type: this.createMeasurementForm.get('type').value,
-            typeHeader: this.createMeasurementForm.get('typeHeader').value
+            measurementType: this.createMeasurementForm.get('type').value,
+            measurementTypeHeader: this.createMeasurementForm.get('typeHeader').value
         }
 
-        this.measurements.push(measurement)
         this.measurementsChange.emit(measurement);
         this.createDialog = false;
     }

@@ -113,6 +113,7 @@ export class ResidentialCreateComponent implements OnInit{
 
         this.residentialService.createBuilding(building).subscribe({
             next: (building) => {
+                this.sendMeasurements(building.aggregateId)
             },
             error: (error) => {
                 this.messageService.add({severity: 'error', summary:  'Error', detail: error.error.error });
@@ -124,11 +125,29 @@ export class ResidentialCreateComponent implements OnInit{
         });
     }
 
+    onMeasurementsChange(measurements: Measurement) {
+        this.measurements.push(measurements);
+    }
+
     private initForm() {
         this.residentialCreateForm.patchValue({
             province: this.city.id,
             district: this.districts[0].id,
             neighborhood: 'this should be dropdown too.'
         })
+    }
+
+    private sendMeasurements(buildingId: string){
+        this.residentialService.addMeasurements(buildingId, this.measurements).subscribe({
+            next: () => {
+
+            },
+            error: (error) => {
+                console.error(error);
+            },
+            complete: () => {
+                this.messageService.add({severity:'success', summary:'Success', detail:'Measurements saved, it may take a few minutes to update the data.'});
+            }
+        });
     }
 }

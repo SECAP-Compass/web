@@ -14,7 +14,11 @@
                 </p-toolbar>
             </div>
             <div class="card-body">
-                <p-table #buildingTable [value]="buildings" dataKey="name" [rows]="10" [loading]="loading"
+                <p-table #buildingTable [value]="buildings" [lazy]="true" (onLazyLoad)="onLazyLoads($event)"
+                         [showCurrentPageReport]="true" dataKey="name" [(rows)]="rows" [loading]="loading"
+                         [(first)]="page" [tableStyle]="{'min-width': '50rem'}"
+                         [totalRecords]="totalRecords"
+                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]"
                 [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
                     <ng-template pTemplate="body" let-building>
                         <tr>

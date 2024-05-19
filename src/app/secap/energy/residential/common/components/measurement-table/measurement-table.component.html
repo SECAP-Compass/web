@@ -1,6 +1,9 @@
 <div>
     <p-table #measurementTable [value]="measurements" dataKey="name" [rows]="10"
-             [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+             [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll"
+             [showCurrentPageReport]="true" [(first)]="first" [tableStyle]="{'min-width': '50rem'}"
+             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]"
+    >
 
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
@@ -17,17 +20,17 @@
 
                 <th pSortableColumn="value">Amount <p-sortIcon field="value"></p-sortIcon></th>
                 <th pSortableColumn="unit">Unit <p-sortIcon field="unit"></p-sortIcon></th>
-                <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                <th pSortableColumn="date">CreatedBy <p-sortIcon field="date"></p-sortIcon></th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-measurement>
             <tr>
 <!--                <td>{{measurement.id}}</td>-->
-                <td>{{measurement.type}}</td>
-                <td>{{measurement.amount}}</td>
+                <td>{{measurement.measurementType}}</td>
+                <td>{{measurement.value}}</td>
                 <td>{{measurement.unit}}</td>
-                <td>{{measurement.timestamp}}</td>
+                <td>{{measurement.createdBy}}</td>
             </tr>
         </ng-template>
     </p-table>
