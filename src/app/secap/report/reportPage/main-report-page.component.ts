@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { GasType, Measurement, MeasurementDate, MeasurementTypeHeader, Measurements } from 'src/app/secap/shared/measurement/measurement-type.model';
+import { FilteredMeasurement, FilteredMeasurements, FilteredMeasurementsClass, MeasurementDate  } from 'src/app/secap/shared/measurement/measurement-type.model';
 import { MeasurementService } from 'src/app/secap/shared/measurement/measurement.service';
-import { DataViewType } from '../data-view.model';
+
 
 @Component({
     selector: 'app-main-report-page',
@@ -18,7 +18,7 @@ export class MainReportPageComponent implements OnInit {
   district?: string;
 
 
-  measurements:Measurements
+  filteredMeasurements:FilteredMeasurements;
   emissionTypes: string[];
   gasTypes: string[];
   dataViewTypes: string[] = ["Tabular","Pie","Line","Bar"];
@@ -43,7 +43,7 @@ export class MainReportPageComponent implements OnInit {
     this.isGenerateReport = false;
     this.emissionTypes = this.measurementService.getMeasurementTypeHeadersHardcoded();
     this.gasTypes = this.measurementService.getGassesHardcoded();
-    this.mockData();
+    this.mockDataAdress();
 
     const navigation = this.router.getCurrentNavigation();
     /*
@@ -57,7 +57,7 @@ export class MainReportPageComponent implements OnInit {
 
   }
 
-  mockData(): void{
+  mockDataAdress(): void{
     this.buildingId = "someID";
     this.address = "someAdress";
     this.city = "someCity";
@@ -65,33 +65,25 @@ export class MainReportPageComponent implements OnInit {
   }
 
   loadData():void{
-    this.transparanecy = 0.5;
+    this.mockData();
     this.data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: this.getMonthlyLabels(this.filteredMeasurements.date),
         datasets: [
             {
-                label: 'Total',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [],
+              label: 'Total',
+              data: [],
+              backgroundColor: [],
             }
         ]
     }
-    /*
-    for(let i=0;i<this.emissionTypes.length;i++){
-      let dataset = {
-        label:this.emissionTypes[i],
-        data:[],
-        backgroundColor: [],
-      }
-      this.data.datasets.push(dataset)
+    for(let i=0;i<this.filteredMeasurements.measurements.length;i++){
+      this.data.datasets[0].data.push(this.filteredMeasurements.measurements[i].value)
     }
-    */
   }
 
   setDataViews(){
     this.setDatasetColors();
     this.setDataViewSettings();
-
   }
 
   setDataViewSettings(){
@@ -135,6 +127,7 @@ export class MainReportPageComponent implements OnInit {
   }
 
   setDatasetColors(){
+    this.transparanecy = 0.5;
     this.dataSetLen = this.data.datasets[0].data.length;
     this.colorIncRate = Math.floor(255/this.dataSetLen);
     this.color = this.colorIncRate;
@@ -164,15 +157,12 @@ export class MainReportPageComponent implements OnInit {
   update(event: Event) {
       this.data = this.data;//create new data
   }
-  
-  refreshReport(){
-    this.loadData();
-  }
 
   generateReport():void{
     if(this.selectedDataView != null){
       this.isGenerateReport = true;
       this.loadData();
+      console.log("generated mock data:", this.data.datasets[0].data);
       this.setDataViews();
     }
   }
@@ -203,6 +193,35 @@ export class MainReportPageComponent implements OnInit {
     }
 
     return monthLabels;
-}
+  }
+
+  mockData(){
+    let name;
+    let type;
+    if(this.selectedGas==null || this.selectedGas=='All'){
+      type = "Emission";
+      name = this.selectedEmission;
+    }{
+      type = "Gas";
+      name = this.selectedGas;
+    }
+
+    let endMonth = 11;
+    let startMonth = 4;
+    const measurementDate: MeasurementDate = {
+      startDate: new Date('2023-04-15'),
+      endDate: new Date('2023-11-10')
+    };
+
+    this.filteredMeasurements = new FilteredMeasurementsClass(type,name,measurementDate);
+
+    for(let i=0;i<endMonth-startMonth+1;i++){
+      const filteredMeasurement:FilteredMeasurement = {
+        value:Math.random()
+      };
+      this.filteredMeasurements.measurements.push(filteredMeasurement);
+    }
+    console.log("generated measurements:",this.filteredMeasurements.measurements);
+  }
 
 }

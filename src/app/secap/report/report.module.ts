@@ -8,13 +8,9 @@ const routes: Routes = [
         loadChildren: () => import('./residentialReport/residentialReport.module').then(m => m.ResidentailReportModule)
     },
     {
-        path: 'mainReportPage',
-        loadChildren: () => import('./common/mainReportPage/main-report-page.module').then(m => m.MainReportPageModule)
+        path: 'reportPage',
+        loadChildren: () => import('./reportPage/main-report-page.module').then(m => m.MainReportPageModule)
     },
-    {
-        path: 'pieChartTest',
-        loadChildren: () => import('./common/mainReportPage/dataView/pieChart/report-pie-chart.module').then(m => m.ReportPieChartModule)
-    }
 ];
 
 @NgModule({

@@ -131,29 +131,9 @@ export class AppMenuComponent implements OnInit {
                         icon: 'pi pi-fw pi-home',
                         items: [
                             {
-                                label: 'Tabular',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
-                            },
-                            {
-                                label: 'Pie Chart',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/report/pieChartTest'],
-                            },
-                            {
-                                label: 'Line Graph',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
-                            },
-                            {
-                                label: 'Bar Graph',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
-                            },
-                            {
                                 label: 'Test-Report-Main-Screen',
                                 icon: 'pi pi-fw pi-home',
-                                routerLink: ['/report/mainReportPage'],
+                                routerLink: ['/report/reportPage'],
                             },
                         ],
                     },

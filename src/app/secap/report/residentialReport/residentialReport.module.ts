@@ -14,8 +14,8 @@ const routes: Routes = [
     {
         path: ':id',
         loadChildren: () =>
-            import('../common/main-page-module').then(
-                (m) => m.MainPageModule
+            import('../reportPage/main-report-page.module').then(
+                (m) => m.MainReportPageModule
             ),
     },
 
