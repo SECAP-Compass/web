@@ -35,7 +35,10 @@ export class MainReportPageComponent implements OnInit {
   dataSetLen:number;
   transparanecy:number;
   color: number;
+  
+  /*controls */
   isGenerateReport:boolean
+  isDiffuseDatas:boolean
 
   constructor(private router: Router,private measurementService:MeasurementService) {}
 
@@ -194,14 +197,14 @@ export class MainReportPageComponent implements OnInit {
 
     return monthLabels;
   }
-
   mockData(){
-    let name;
-    let type;
+    let name:string;
+    let type:string;
     if(this.selectedGas==null || this.selectedGas=='All'){
       type = "Emission";
       name = this.selectedEmission;
-    }{
+    }
+    else{
       type = "Gas";
       name = this.selectedGas;
     }

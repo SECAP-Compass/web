@@ -22,6 +22,7 @@ import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { CalendarModule } from 'primeng/calendar';
 import { ChartModule } from 'primeng/chart';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
     declarations: [MainReportPageComponent],
@@ -49,7 +50,8 @@ import { ChartModule } from 'primeng/chart';
         PanelModule,
         CardModule,
         CalendarModule,
-        ChartModule
+        ChartModule,
+        CheckboxModule
     ],
 })
 export class MainReportPageModule { }

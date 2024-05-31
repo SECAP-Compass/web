@@ -28,23 +28,12 @@
                       (click)="generateReport()">
                     </button>
                 </div> 
-                 <!-- 
-                &nbsp; &nbsp;
-                <div class="my-2">
-                  <button 
-                    pButton 
-                    pRipple 
-                    label="Refresh Report" 
-                    class="p-button-success" 
-                    (click)="refreshReport()">
-                  </button>
-              </div>-->
             </ng-template>
           </p-toolbar>
         </div>
   
         <div class="card-body">
-          <p class="m-0">
+          <p-toolbar>
             <p-dropdown
             class="mr-2"
             [options]="emissionTypes"
@@ -73,7 +62,13 @@
             [(ngModel)]="dates" 
             selectionMode="range" 
             [readonlyInput]="true" />
-          </p>
+
+            <p-checkbox 
+            [(ngModel)]="isDiffuseDatas" 
+            [binary]="true" 
+            inputId="binary" 
+            label = "Diffuse Data Components"/>
+          </p-toolbar>
         </div>
 
         <p-panel header="Data View Explanation" [toggleable]="true">
