@@ -16,6 +16,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
                     { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
                     { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
                     { path: 'energy' , loadChildren: () => import('./secap/energy/energy.module').then(m => m.EnergyModule) },
+                    { path: 'report', loadChildren: () => import('./secap/report/report.module').then(m => m.ReportModule)}
 
                 ]
             },

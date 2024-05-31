@@ -1,0 +1,95 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <p-toolbar>
+                    <h5>Residential Report</h5>
+                </p-toolbar>
+            </div>
+            <div class="card-body">
+                <p-table #buildingTable [value]="buildings" [lazy]="true" (onLazyLoad)="onLazyLoads($event)"
+                         [showCurrentPageReport]="true" dataKey="name" [(rows)]="rows" [loading]="loading"
+                         [(first)]="page" [tableStyle]="{'min-width': '50rem'}"
+                         [totalRecords]="totalRecords"
+                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]"
+                [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-building>
+                        <tr>
+                            <td>{{building.name}}</td>
+                            <td>{{building.province}}</td>
+                            <td>{{building.district}}</td>
+                            <td>{{building.neighbourhood}}</td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="caption">
+                        <div class="flex justify-content-between flex-column sm:flex-row">
+                            <span>
+                                <p-dropdown
+                                    class="mr-2"
+                                    [options]="types"
+                                    [(ngModel)]="selectedType"
+                                    placeholder="Select Type"
+                                />
+                                <p-dropdown
+                                    class="mr-2"
+                                    [options]="cities"
+                                    [(ngModel)]="selectedCity"
+                                    optionLabel="name"
+                                    placeholder="Select City"
+                                />
+                                <p-dropdown
+                                    class="mr-2"
+                                    [options]="districts"
+                                    [(ngModel)]="selectedDistrict"
+                                    optionLabel="name"
+                                    placeholder="Select District"
+                                />
+                            </span>
+
+                            <span class="p-input-icon-left mb-2">
+                                <button pButton label="Clear" class="p-button-outlined ml-2 mb-2" icon="pi pi-filter-slash" (click)="clear(buildingTable)"></button>
+                                <button pButton label="Search" class="p-button-outlined ml-2 mb-2" icon="pi pi-filter" (click)="applyFilter()"></button>
+                            </span>
+<!--                            <span class="p-input-icon-left mb-2">-->
+<!--                                <i class="pi pi-search"></i>-->
+<!--                                <input pInputText type="text" #filter (input)="onGlobalFilter(buildingTable, $event)" placeholder="Search Keyword" class="w-full"/>-->
+<!--                            </span>-->
+                        </div>
+                    </ng-template>
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="id" >Id<p-sortIcon field="id"></p-sortIcon></th>
+                            <th>Province</th>
+                            <th>District</th>
+                            <th>Country</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-building>
+                        <tr                 (click)="onRowSelect(building)">
+                            <td>{{building.id}}</td>
+                            <td>{{building.address.province}}</td>
+                            <td>{{building.address.district}}</td>
+                            <td>{{building.address.country}}</td>
+                        </tr>
+
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8">No buildings found.</td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td colspan="8">Loading building data. Please wait.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

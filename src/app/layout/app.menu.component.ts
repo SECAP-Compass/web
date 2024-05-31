@@ -102,7 +102,63 @@ export class AppMenuComponent implements OnInit {
                     },
                 ],
             },
-
+            {
+                icon: 'pi pi-fw pi-home',
+                items: [
+                    {
+                        label: 'Raporlama',
+                        icon: 'pi pi-fw pi-home',
+                        items: [
+                            {
+                                label: 'Bina Raporları',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/report/residentialReport'],
+                            },
+                            {
+                                label: 'Diğer Raporlar',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                icon: 'pi pi-fw pi-home',
+                items: [
+                    {
+                        label: 'Test-Data-View',
+                        icon: 'pi pi-fw pi-home',
+                        items: [
+                            {
+                                label: 'Tabular',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Pie Chart',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/report/pieChartTest'],
+                            },
+                            {
+                                label: 'Line Graph',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Bar Graph',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Test-Report-Main-Screen',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/report/mainReportPage'],
+                            },
+                        ],
+                    },
+                ],
+            },
             /*            {
                 label: 'UI Components',
                 items: [
