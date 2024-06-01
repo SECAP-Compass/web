@@ -52,14 +52,14 @@
             class="mr-2"
             [options]="dataViewTypes"
             [(ngModel)]="selectedDataView"
-            (onChange)="setDataViewSettings()"
+            (onChange)="reGenReport()"
             placeholder="Data View Type"/>
     
             <p-calendar 
             view="month" 
-            dateFormat="mm/yy" 
+            dateFormat="m.yy" 
             [showIcon]="true" 
-            [(ngModel)]="dates" 
+            [(ngModel)]="rangeDates" 
             selectionMode="range" 
             [readonlyInput]="true" />
 
@@ -67,6 +67,7 @@
             [(ngModel)]="isDiffuseDatas" 
             [binary]="true" 
             inputId="binary" 
+            [disabled]="selectedDataView == 'Pie'"
             label = "Diffuse Data Components"/>
           </p-toolbar>
         </div>

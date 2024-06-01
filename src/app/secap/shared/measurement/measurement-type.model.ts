@@ -1,5 +1,3 @@
-import { Building } from "../../energy/residential/common/building.model";
-
 export interface FilteredMeasurements{
     filterType:string;
     name:string;
@@ -47,4 +45,22 @@ export interface MeasurementDate{
     startDate?: Date;
     endDate?: Date;
 }
+
+export interface DateFormat{
+    month: number,
+    year: number,
+}
+
+export class DateFormatClass implements DateFormat{
+    month: number;
+    year: number;
+
+    constructor( year:number,month: number ){
+        this.month = month;
+        this.year = year;
+    }
+}
+
+
+
 
