@@ -1,28 +1,5 @@
 import { Building } from "../../energy/residential/common/building.model";
 
-export interface TotalMeasurements{
-    measurements:Measurement[];
-    total:number;
-    date:MeasurementDate; 
-}
-
-export interface Measurement{
-    id: number;
-    measurementByType: Emission[];
-    total:number;
-}
-
-export interface Emission{
-    measurementType: string;
-    gasses: GasMeasurement[];
-    total:number;
-}
-
-export interface GasMeasurement{
-    gas:string;
-    value:number;
-}
-
 export interface FilteredMeasurements{
     filterType:string;
     name:string;

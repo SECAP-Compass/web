@@ -79,8 +79,8 @@ export class MainReportPageComponent implements OnInit {
             }
         ]
     }
-    for(let i=0;i<this.filteredMeasurements.measurements.length;i++){
-      this.data.datasets[0].data.push(this.filteredMeasurements.measurements[i].value)
+    for(const element of this.filteredMeasurements.measurements){
+      this.data.datasets[0].data.push(element.value)
     }
   }
 

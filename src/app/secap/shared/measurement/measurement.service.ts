@@ -1,7 +1,7 @@
 import {DataService} from "../service/data.service";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
-import {Measurement} from "../../energy/residential/common/measurement.model";
+import {HttpParams} from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -34,4 +34,28 @@ export class MeasurementService {
             measurementUnits: string[]
         }>('buildings/measurement-units')
     }
+
+    getMeasurementsByFilter(filter: any): Observable<any> {
+        let params = new HttpParams()
+          .set('startDate', filter.startDate)
+          .set('endDate', filter.endDate)
+          .set('page', filter.page || '0')
+          .set('size', filter.size || '10');
+    
+        filter.types.forEach((type: string, index: number) => {
+          params = params.append(`types[${index}]`, type);
+        });
+    
+        filter.typeHeaders.forEach((header: string, index: number) => {
+          params = params.append(`typeHeaders[${index}]`, header);
+        });
+    
+        filter.gasTypes.forEach((gas: string, index: number) => {
+          params = params.append(`gasTypes[${index}]`, gas);
+        });
+    
+        const path = `/filter/${filter.buildingId}`;
+        
+        return this.dataService.get<any>(path, params);
+      }
 }
