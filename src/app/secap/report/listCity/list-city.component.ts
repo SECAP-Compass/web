@@ -13,12 +13,12 @@ import { ReportModel } from '../../shared/measurement/measurement-model';
 export class ListCityComponent implements OnInit {
 
 
-    cityNameIdMap:Map<string,number>;
+    cityNameIdMap: { [key: string]: number };
     selectedCityId: number;
-    selectedCityName:string;
+    selectedCityName: string;
     years: string[];
-    selectedYear:string[];
-    cityNames:string[];
+    selectedYear: string[];
+    cityNames: string[];
     report: ReportModel;
     gasTypes: string[];
     dataViewTypes: string[] = ["Pie", "Bar"];
@@ -38,19 +38,22 @@ export class ListCityComponent implements OnInit {
     isDiffuseDatas: boolean
 
     constructor(
-        private router: Router, 
+        private router: Router,
         private measurementService: MeasurementService,) {
-            this.years = [
-                "2024",
-                "2023",
-                "2022",
-                "2021"
-            ];
-         }
+        this.years = [
+            "2024",
+            "2023",
+            "2022",
+            "2021"
+        ];
+        this.cityNames = [
+            "İstanbul"
+        ]
+        this.cityNameIdMap = {};
+    }
 
     ngOnInit(): void {
-        this.cityNameIdMap.set("İstanbul",34)
-        this.cityNames.push("İstanbul");
+        this.cityNameIdMap["İstanbul"] = 34
         this.transparanecy = 0.8;
         this.isGenerateReport = false;
         this.gasTypes = this.measurementService.getGassesHardcoded();
@@ -67,27 +70,22 @@ export class ListCityComponent implements OnInit {
         }
     }
 
-    assignCityId(){
-        this.selectedCityId = this.cityNameIdMap.get(this.selectedCityName)
+    assignCityId() {
+        this.selectedCityId = this.cityNameIdMap[this.selectedCityName]
     }
 
     generateReport(): void {
         if (this.selectedDataView != null) {
             this.loadData();
-            //console.log("generated mock data:", this.data.datasets[0].data);
         }
     }
 
     loadData(): void {
-        let startDateParam = new DateFormatClass(this.rangeDates[0].getFullYear(), this.rangeDates[0].getMonth());
-        let endDateParam = new DateFormatClass(this.rangeDates[1].getFullYear(), this.rangeDates[1].getMonth());
-
         let filter = {
             cityId: this.selectedCityId,
             year: this.selectedYear
         };
         console.log("filters:", filter);
-        //filter.gasTypes.push(this.selectedGas);
 
         this.measurementService.getCityMeasurementsByFilter(filter).subscribe(
             (r) => {
@@ -101,17 +99,7 @@ export class ListCityComponent implements OnInit {
     }
 
     setDataViews() {
-        if (!this.isDiffuseDatas) {
-            if (this.selectedDataView != 'Pie') {
-                this.setOneColor();
-            }
-            else {
-                this.setColors();
-            }
-        }
-        else {
-            this.setColorsDiffused();
-        }
+        this.setColors();
         this.setDataViewSettings();
     }
 
@@ -123,18 +111,17 @@ export class ListCityComponent implements OnInit {
             map.set(element, 0);
         }
 
+        map.set("CO2", map.get("CO2") + this.report.data.co2);
 
-            map.set("CO2", map.get("CO2") + this.report.data.co2);
+        map.set("CH4", map.get("CH4") + this.report.data.ch4);
 
-            map.set("CH4", map.get("CH4") + this.report.data.ch4);
+        map.set("Biofuel CO2", map.get("Biofuel CO2") + this.report.data.biofuelCO2);
 
-            map.set("Biofuel CO2", map.get("Biofuel CO2") + this.report.data.biofuelCO2);
+        map.set("CO2e", map.get("CO2e") + this.report.data.co2e);
 
-            map.set("CO2e", map.get("CO2e") + this.report.data.co2e);
+        map.set("EF", map.get("EF") + this.report.data.ef);
 
-            map.set("EF", map.get("EF") + this.report.data.ef);
-
-            map.set("N2O", map.get("N2O") + this.report.data.n2O);
+        map.set("N2O", map.get("N2O") + this.report.data.n2O);
 
 
         this.data = {
@@ -197,25 +184,6 @@ export class ListCityComponent implements OnInit {
         }
     }
 
-    setOneColor() {
-        this.dataSetLen = this.data.datasets[0].data.length;
-        const hueIncrement = 360 / this.dataSetLen;
-        const hue = 1 * hueIncrement;
-        const colorString = this.hslToRgba(hue, 100, 50, this.transparanecy);
-        this.data.datasets[0].backgroundColor.push(colorString);
-    }
-
-    setColorsDiffused() {
-        const hueIncrement = 360 / this.data.datasets.length;
-        let i = 0
-        for (const e of this.data.datasets) {
-            const hue = i * hueIncrement;
-            const colorString = this.hslToRgba(hue, 100, 50, this.transparanecy);
-            e.borderColor = colorString;
-            e.backgroundColor.push(colorString);
-            i++;
-        }
-    }
 
     // Function to convert HSL to RGBA
     hslToRgba(h, s, l, a) {

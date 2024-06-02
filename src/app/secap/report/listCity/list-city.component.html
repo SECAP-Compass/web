@@ -1,9 +1,9 @@
 <div class="grid">
     <div class="col-12">
-        <p-panel header="Information" [toggleable]="false">
+        <p-panel header = "Select City" [toggleable]="false">
             <p-toolbar>
                 <p-dropdown class="mr-2" [options]="cityNames" [(ngModel)]="selectedCityName" (onChange)="assignCityId()"
-                    placeholder="Şehirler" />
+                    placeholder="Cities" />
             </p-toolbar>
         </p-panel>
     
@@ -16,7 +16,7 @@
                       <button 
                         pButton 
                         pRipple 
-                        label="Rapor üret" 
+                        label="Generate Report" 
                         class="p-button-success" 
                         (click)="generateReport()">
                       </button>
@@ -40,12 +40,6 @@
               [(ngModel)]="selectedYear"
               placeholder="Years"/>
   
-              <p-checkbox 
-              [(ngModel)]="isDiffuseDatas" 
-              [binary]="true" 
-              inputId="binary" 
-              [disabled]="selectedDataView == 'Pie'"
-              label = "Verileri ayrıştır"/>
             </p-toolbar>
           </div>
   

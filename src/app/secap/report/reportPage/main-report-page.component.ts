@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DateFormat, DateFormatClass} from 'src/app/secap/shared/measurement/measurement-type.model';
 import { MeasurementService } from 'src/app/secap/shared/measurement/measurement.service';
 import { BuildingMeasurement  } from '../../shared/measurement/measurement-model';
@@ -21,7 +21,7 @@ export class MainReportPageComponent implements OnInit {
   emissionTypes: string[];
   emissionTypeKeys: string[];
   gasTypes: string[];
-  dataViewTypes: string[] = ["Tabular","Pie","Line","Bar"];
+  dataViewTypes: string[] = ["Pie","Line","Bar"];
 
   selectedEmission:string=null;
   selectedGas:string=null;
@@ -40,15 +40,24 @@ export class MainReportPageComponent implements OnInit {
   isGenerateReport:boolean
   isDiffuseDatas:boolean
 
-  constructor(private router: Router,private measurementService:MeasurementService) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private measurementService:MeasurementService) {}
 
   ngOnInit(): void {
+
     this.transparanecy = 0.8;
     this.isGenerateReport = false;
     this.emissionTypes = this.measurementService.getMeasurementTypeHeadersHardcoded();
     this.emissionTypeKeys = this.measurementService.getEmissionTypeKeysHardcoded();
     this.gasTypes = this.measurementService.getGassesHardcoded();
     this.mockDataAdress();
+  }
+
+  getBuildingAdresses():void{
+    this.buildingId = this.activatedRoute.snapshot.paramMap.get('id');
+
   }
 
   mockDataAdress(): void{
@@ -98,6 +107,7 @@ export class MainReportPageComponent implements OnInit {
         console.log("filteredData",this.filteredMeasurements)
 
         if(this.selectedDataView == 'Pie'){
+          this.isDiffuseDatas = false;
           if(this.selectedEmission=='Total'){
             this.setDataViewByEmissionType();
           }

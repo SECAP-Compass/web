@@ -18,57 +18,26 @@ export class AppMenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-home',
                 items: [
                     {
-                        label: 'Sabit Enerji',
+                        label: 'Constant Energy',
                         icon: 'pi pi-fw pi-home',
                         items: [
                             {
-                                label: 'Konut',
+                                label: 'Residential',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/energy/residential'],
                             },
                             {
-                                label: 'Ticari',
+                                label: 'Commercial',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/'],
                             },
                             {
-                                label: 'Endüstriyel',
+                                label: 'Industrial',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/'],
                             },
                             {
-                                label: 'Tarımsal',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                icon: 'pi pi-fw pi-home',
-                items: [
-                    {
-                        label: 'Ulaşım',
-                        icon: 'pi pi-fw pi-home',
-                        items: [
-                            {
-                                label: 'Karayolu',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
-                            },
-                            {
-                                label: 'Demiryolu',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
-                            },
-                            {
-                                label: 'Denizyolu',
-                                icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
-                            },
-                            {
-                                label: 'Havayolu',
+                                label: 'Agriculture',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/'],
                             },
@@ -80,21 +49,26 @@ export class AppMenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-home',
                 items: [
                     {
-                        label: 'Atık Yönetimi',
+                        label: 'Transportation',
                         icon: 'pi pi-fw pi-home',
                         items: [
                             {
-                                label: 'Katı Atık',
+                                label: 'Road',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/'],
                             },
                             {
-                                label: 'Biyolojik Atık',
+                                label: 'Railway',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/'],
                             },
                             {
-                                label: 'Atık Su Arıtma & Desarj',
+                                label: 'Waterway',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Airway',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/'],
                             },
@@ -106,16 +80,42 @@ export class AppMenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-home',
                 items: [
                     {
-                        label: 'Raporlama',
+                        label: 'Waste Management',
                         icon: 'pi pi-fw pi-home',
                         items: [
                             {
-                                label: 'Bina Raporları',
+                                label: 'Solid Waste',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Bio Waste',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                            {
+                                label: 'Waste Water Treatment & Discharge',
+                                icon: 'pi pi-fw pi-home',
+                                routerLink: ['/'],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                icon: 'pi pi-fw pi-home',
+                items: [
+                    {
+                        label: 'Reports',
+                        icon: 'pi pi-fw pi-home',
+                        items: [
+                            {
+                                label: 'Building',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/report/residentialReport'],
                             },
                             {
-                                label: 'Şehir Raporları',
+                                label: 'City',
                                 icon: 'pi pi-fw pi-home',
                                 routerLink: ['/report/cityReport'],
                             },

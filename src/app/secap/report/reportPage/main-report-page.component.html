@@ -1,15 +1,6 @@
 <div class="grid">
   <div class="col-12">
     <p-panel header="Information" [toggleable]="true">
-        <div *ngIf="city">
-          City: {{ city }} 
-        </div>
-        <div *ngIf="district">
-          District: {{ district }} 
-        </div>
-        <div *ngIf="address">
-          Address: {{ address }} 
-        </div>
         <div *ngIf="buildingId">
           Building Address: {{ buildingId }}
         </div>
@@ -39,15 +30,6 @@
             [options]="emissionTypes"
             [(ngModel)]="selectedEmission"
             placeholder="Emission Type"/>
-    
-            <!--
-            <p-dropdown
-            class="mr-2"
-            [options]="gasTypes"
-            [(ngModel)]="selectedGas"
-            placeholder="Gas Type"  
-            [disabled]="selectedEmission !== 'Total'">
-            </p-dropdown>-->
             
             <p-dropdown
             class="mr-2"
@@ -73,18 +55,9 @@
           </p-toolbar>
         </div>
 
-        <p-panel header="Data View Explanation" [toggleable]="true">
-          <p>
-            this will be an explanation about the graph below
-          </p>
-        </p-panel>
-
         <div *ngIf="isGenerateReport" class="report">
           <container-element [ngSwitch]="selectedDataView">
             <!-- the same view can be shown in more than one case -->
-            <div *ngSwitchCase="'Tabular'">
-              tabular
-            </div>
             <div *ngSwitchCase="'Pie'">
               <p-chart type="pie" [data]="data" [options] = "options" width="70vw" height="80vh"></p-chart>
               <button type="button" pButton (click)="update($event)"></button>
