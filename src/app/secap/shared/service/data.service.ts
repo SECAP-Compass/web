@@ -9,7 +9,7 @@ import {Observable} from "rxjs";
 })
 export class DataService extends BaseHttpService {
 
-    baseUrl = "http://localhost:5173/";
+    baseUrl = "http://localhost:8002/";
 
     constructor(httpClient: HttpClient) {
         super(httpClient);

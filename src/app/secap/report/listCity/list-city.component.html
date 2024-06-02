@@ -1,0 +1,75 @@
+<div class="grid">
+    <div class="col-12">
+        <p-panel header="Information" [toggleable]="false">
+            <p-toolbar>
+                <p-dropdown class="mr-2" [options]="cityNames" [(ngModel)]="selectedCityName" (onChange)="assignCityId()"
+                    placeholder="Şehirler" />
+            </p-toolbar>
+        </p-panel>
+    
+      <div class="card">
+          <div class="card-header">
+            <p-toolbar>
+              <h5>Report</h5>
+              <ng-template pTemplate="right">
+                  <div class="my-1">
+                      <button 
+                        pButton 
+                        pRipple 
+                        label="Rapor üret" 
+                        class="p-button-success" 
+                        (click)="generateReport()">
+                      </button>
+                  </div> 
+              </ng-template>
+            </p-toolbar>
+          </div>
+    
+          <div class="card-body">
+            <p-toolbar>
+              <p-dropdown
+              class="mr-2"
+              [options]="dataViewTypes"
+              [(ngModel)]="selectedDataView"
+              (onChange)="reGenReport()"
+              placeholder="Data View Type"/>
+      
+              <p-dropdown
+              class="mr-2"
+              [options]="years"
+              [(ngModel)]="selectedYear"
+              placeholder="Years"/>
+  
+              <p-checkbox 
+              [(ngModel)]="isDiffuseDatas" 
+              [binary]="true" 
+              inputId="binary" 
+              [disabled]="selectedDataView == 'Pie'"
+              label = "Verileri ayrıştır"/>
+            </p-toolbar>
+          </div>
+  
+          <div *ngIf="isGenerateReport" class="report">
+            <container-element [ngSwitch]="selectedDataView">
+              <!-- the same view can be shown in more than one case -->
+              <div *ngSwitchCase="'Tabular'">
+                tabular
+              </div>
+              <div *ngSwitchCase="'Pie'">
+                <p-chart type="pie" [data]="data" [options] = "options" width="70vw" height="80vh"></p-chart>
+                <button type="button" pButton (click)="update($event)"></button>
+              </div>
+              <div *ngSwitchCase="'Line'">
+                <p-chart type="line" [data]="data"  [options] = "options" width="70vw" height="80vh"></p-chart>
+                <button type="button" pButton (click)="update($event)"></button>
+              </div>
+              <div *ngSwitchCase="'Bar'">
+                <p-chart type="bar" [data]="data"  [options] = "options" width="70vw" height="80vh"></p-chart>
+                <button type="button" pButton (click)="update($event)"></button>
+              </div>
+            </container-element>
+          </div>
+      </div>
+    </div>
+  </div>
+  

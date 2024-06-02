@@ -7,6 +7,12 @@ export interface MeasurementCollection{
   pageSize:number;
 }
 
+export interface ReportModel{
+  id: string,
+  data: MeasurementCalculation,
+  lastModifiedDate: Date,
+}
+
 export interface BuildingMeasurement {
     id: string;
     buildingId: string;

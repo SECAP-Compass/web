@@ -11,6 +11,10 @@ const routes: Routes = [
         path: 'reportPage',
         loadChildren: () => import('./reportPage/main-report-page.module').then(m => m.MainReportPageModule)
     },
+    {
+      path:'cityReport',
+      loadChildren: () => import('./listCity/list-city.module').then(m => m.ListCityModule)
+    }
 ];
 
 @NgModule({

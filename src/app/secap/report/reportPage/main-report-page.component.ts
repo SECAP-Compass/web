@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DateFormat, DateFormatClass, FilteredMeasurement, FilteredMeasurements, FilteredMeasurementsClass, MeasurementDate  } from 'src/app/secap/shared/measurement/measurement-type.model';
+import { DateFormat, DateFormatClass} from 'src/app/secap/shared/measurement/measurement-type.model';
 import { MeasurementService } from 'src/app/secap/shared/measurement/measurement.service';
-import { BuildingMeasurement, MeasurementCollection } from '../../shared/measurement/measurement-model';
+import { BuildingMeasurement  } from '../../shared/measurement/measurement-model';
 
 
 @Component({
@@ -19,6 +19,7 @@ export class MainReportPageComponent implements OnInit {
 
   filteredMeasurements:BuildingMeasurement[] = [];
   emissionTypes: string[];
+  emissionTypeKeys: string[];
   gasTypes: string[];
   dataViewTypes: string[] = ["Tabular","Pie","Line","Bar"];
 
@@ -42,8 +43,10 @@ export class MainReportPageComponent implements OnInit {
   constructor(private router: Router,private measurementService:MeasurementService) {}
 
   ngOnInit(): void {
+    this.transparanecy = 0.8;
     this.isGenerateReport = false;
     this.emissionTypes = this.measurementService.getMeasurementTypeHeadersHardcoded();
+    this.emissionTypeKeys = this.measurementService.getEmissionTypeKeysHardcoded();
     this.gasTypes = this.measurementService.getGassesHardcoded();
     this.mockDataAdress();
   }
@@ -86,7 +89,7 @@ export class MainReportPageComponent implements OnInit {
     };
     console.log("filters:", filter);
     filter.typeHeaders.push(this.selectedEmission);
-    filter.gasTypes.push(this.selectedGas);
+    //filter.gasTypes.push(this.selectedGas);
 
     this.measurementService.getMeasurementsByFilter(filter).subscribe(
       (buildingMeasurements) => {
@@ -95,13 +98,15 @@ export class MainReportPageComponent implements OnInit {
         console.log("filteredData",this.filteredMeasurements)
 
         if(this.selectedDataView == 'Pie'){
-          this.setDataViewByEmissionType();
+          if(this.selectedEmission=='Total'){
+            this.setDataViewByEmissionType();
+          }
+          else{
+            this.diffuseDataForPie();
+          }
         }
         else if(this.isDiffuseDatas){
           this.diffuseElements();
-        }
-        else if(this.selectedEmission!='Total'){
-          //
         }
         else{
           this.setDataViewMonthly(startDateParam,endDateParam);
@@ -113,9 +118,16 @@ export class MainReportPageComponent implements OnInit {
   }
 
   setDataViews(){
-    this.setDatasetColors();
-    if(this.isDiffuseDatas){
-      this.setColorsUndiffused();
+    if(!this.isDiffuseDatas){
+      if(this.selectedDataView!='Pie'){
+        this.setOneColor();
+      }
+      else{
+        this.setColors();
+      }
+    }
+    else{
+      this.setColorsDiffused();
     }
     this.setDataViewSettings();
   }
@@ -143,6 +155,7 @@ export class MainReportPageComponent implements OnInit {
     }
     for(const element of this.filteredMeasurements){
       let key = this.convertDateToString(element.measurement.measurementDate.year,element.measurement.measurementDate.month)
+      console.log("key",key);
       map.set(key,map.get(key)+element.measurement.value)
     }
     this.data = {
@@ -158,40 +171,137 @@ export class MainReportPageComponent implements OnInit {
     console.log("labels",this.data.labels)
   }
 
-  setDataViewByGasses(){
-  }
 
   diffuseElements(){
-      let startDateParam = new DateFormatClass(this.rangeDates[0].getFullYear(),this.rangeDates[0].getMonth());
-      let endDateParam = new DateFormatClass(this.rangeDates[1].getFullYear(),this.rangeDates[1].getMonth());
-      const months = this.getMonthlyLabels(startDateParam,endDateParam)
-      console.log("months",months)
-  
-      this.data = {
-        labels: months,
-        datasets: [
-        ]
-      }
-  
-      for(const element of this.emissionTypes){
-        let map = new Map();
-        for(const element of months){
-          map.set(element,0);
-        }
-        for(const e of this.filteredMeasurements){
-          if(e.measurement.measurementType==element){
-            let key = this.convertDateToString(e.measurement.measurementDate.year,e.measurement.measurementDate.month)
-            map.set(key,map.get(key)+e.measurement.value)
-          }
-        }
-        this.data.datasets.push({
-          label:element,
-          data:[...map.values()],
-          backgroundColor: [],
-        })
-      }
-      console.log("diffused data:", this.data.datasets)
+    if(this.selectedEmission=='Total'){
+      this.diffuseDataByEmissions();
+    }
+    else{
+      this.diffuseDataByGasses();
+    }
+  }
 
+  diffuseDataByEmissions(){
+    let startDateParam = new DateFormatClass(this.rangeDates[0].getFullYear(),this.rangeDates[0].getMonth());
+    let endDateParam = new DateFormatClass(this.rangeDates[1].getFullYear(),this.rangeDates[1].getMonth());
+    const months = this.getMonthlyLabels(startDateParam,endDateParam)
+    console.log("months",months)
+
+    this.data = {
+      labels: months,
+      datasets: [
+      ]
+    }
+
+    let emissionTypeMap = new Map()
+    for(const element of this.emissionTypeKeys){
+      let map = new Map();
+      emissionTypeMap.set(element, map);
+      for(const element of months){
+        map.set(element,0);
+      }
+    }
+
+    for(const e of this.filteredMeasurements){
+      for(const element of this.emissionTypeKeys){
+        if(element === e.measurement.measurementTypeHeader){
+          let key = this.convertDateToString(e.measurement.measurementDate.year,e.measurement.measurementDate.month)
+          emissionTypeMap.get(element).set(key,emissionTypeMap.get(element).get(key)+e.measurement.value)
+        }
+      }
+    }
+
+    for(const element of this.emissionTypeKeys){
+      this.data.datasets.push({
+        label: element,
+          data: [...emissionTypeMap.get(element).values()],
+          backgroundColor: [],
+      })
+    }
+
+    console.log("data:",this.data)
+    
+  }
+
+  diffuseDataByGasses(){
+    let startDateParam = new DateFormatClass(this.rangeDates[0].getFullYear(),this.rangeDates[0].getMonth());
+    let endDateParam = new DateFormatClass(this.rangeDates[1].getFullYear(),this.rangeDates[1].getMonth());
+    const months = this.getMonthlyLabels(startDateParam,endDateParam)
+    console.log("months",months)
+    
+    this.data = {
+      labels: months,
+      datasets: [
+      ]
+    }
+
+    let gasTypeMap = new Map()
+    let gasNames = this.measurementService.getGasNames()
+    for(const element of gasNames){
+      let map = new Map();
+      gasTypeMap.set(element, map);
+      for(const element of months){
+        map.set(element,0);
+      }
+    }
+
+    for(const e of this.filteredMeasurements){
+      let key = this.convertDateToString(e.measurement.measurementDate.year,e.measurement.measurementDate.month)
+      
+      gasTypeMap.get("CO2").set(key,gasTypeMap.get("CO2").get(key)+e.measurement.measurementCalculation.co2);
+
+      gasTypeMap.get("CH4").set(key,gasTypeMap.get("CH4").get(key)+e.measurement.measurementCalculation.ch4);
+
+      gasTypeMap.get("Biofuel CO2").set(key,gasTypeMap.get("Biofuel CO2").get(key)+e.measurement.measurementCalculation.biofuelCO2);
+
+      gasTypeMap.get("CO2e").set(key,gasTypeMap.get("CO2e").get(key)+e.measurement.measurementCalculation.co2e);
+
+      gasTypeMap.get("EF").set(key,gasTypeMap.get("EF").get(key)+e.measurement.measurementCalculation.ef);
+
+      gasTypeMap.get("N2O").set(key,gasTypeMap.get("N2O").get(key)+e.measurement.measurementCalculation.n2O);
+    }
+
+    for(const element of gasNames){
+      this.data.datasets.push({
+        label: element,
+          data: [...gasTypeMap.get(element).values()],
+          backgroundColor: [],
+      })
+    }
+  }
+
+  diffuseDataForPie(){
+    let map = new Map();
+
+    let gasNames = this.measurementService.getGasNames();
+    for(const element of gasNames){
+      map.set(element,0);
+    }
+  
+    for(const e of this.filteredMeasurements){
+
+      map.set("CO2",map.get("CO2")+e.measurement.measurementCalculation.co2);
+
+      map.set("CH4",map.get("CH4")+e.measurement.measurementCalculation.ch4);
+
+      map.set("Biofuel CO2",map.get("Biofuel CO2")+e.measurement.measurementCalculation.biofuelCO2);
+
+      map.set("CO2e",map.get("CO2e")+e.measurement.measurementCalculation.co2e);
+
+      map.set("EF",map.get("EF")+e.measurement.measurementCalculation.ef);
+
+      map.set("N2O",map.get("N2O")+e.measurement.measurementCalculation.n2O);
+    }
+
+    this.data = {
+      labels: [...map.keys()],
+      datasets: [{
+        label:"Gasses",
+        data: [...map.values()],
+        backgroundColor: [],
+      }
+      ]
+    }
   }
 
   setDataViewSettings(){
@@ -233,58 +343,64 @@ export class MainReportPageComponent implements OnInit {
     }
   }
 
-  setDatasetColors(){
-    this.transparanecy = 0.2;
+  setColors(){
     this.dataSetLen = this.data.datasets[0].data.length;
-    this.colorIncRate = Math.floor(255/this.dataSetLen);
-    this.color = this.colorIncRate;
-    const colors:string[] = [];
-    for (let i = 0; i < this.dataSetLen; i++){
-        let colorString;
-        if(this.color%3 == 1){
-            colorString = 'rgba(' + this.color + ',255,100,' + this.transparanecy + ')';
-        }
-        else if(this.color%3 == 2){
-            colorString = 'rgba(255,' + this.color + ',50,' + this.transparanecy + ')';
-        }
-        else{
-            colorString = 'rgba(99,255,' + this.color + ',' + this.transparanecy + ')';
-        }
-        console.log('Generated color:', colorString); // Debugging output
-        //colors.push(colorString)
-        for(let j=0;j<1;j++){
-          this.data.datasets[j].backgroundColor.push(colorString);
-          console.log("dataset color#1", this.data.datasets[j].backgroundColor);
-        }
-        this.color += this.colorIncRate;
+    const hueIncrement = 360 / this.dataSetLen;
+    for(let i = 0;i<this.dataSetLen;i++){
+      const hue = i * hueIncrement;
+      const colorString = this.hslToRgba(hue, 100, 50, this.transparanecy);
+      this.data.datasets[0].backgroundColor.push(colorString);
+      //this.data.datasets[0].borderColor = colorString;
     }
-    return colors;
   }
 
-  setColorsUndiffused(){
-    this.transparanecy = 0.2;
-    this.colorIncRate = Math.floor(255/this.dataSetLen);
-    this.color = this.colorIncRate;
-    const colors:string[] = [];
+  setOneColor(){
+    this.dataSetLen = this.data.datasets[0].data.length;
+    const hueIncrement = 360 / this.dataSetLen;
+    const hue = 1 * hueIncrement;
+    const colorString = this.hslToRgba(hue, 100, 50, this.transparanecy);
+    this.data.datasets[0].backgroundColor.push(colorString);
+    //this.data.datasets[0].borderColor = colorString;
+  }
+
+  setColorsDiffused(){
+    const hueIncrement = 360 / this.data.datasets.length;
+    let i = 0
     for(const e of this.data.datasets){
-        let colorString;
-        if(this.color%3 == 1){
-            colorString = 'rgba(' + this.color + ',255,100,' + this.transparanecy + ')';
-        }
-        else if(this.color%3 == 2){
-            colorString = 'rgba(255,' + this.color + ',50,' + this.transparanecy + ')';
-        }
-        else{
-            colorString = 'rgba(99,255,' + this.color + ',' + this.transparanecy + ')';
-        }
-        console.log('Generated color:', colorString); // Debugging output
-        //colors.push(colorString)
+        const hue = i * hueIncrement;
+        const colorString = this.hslToRgba(hue, 100, 50, this.transparanecy);
         e.borderColor = colorString;
-        this.color += this.colorIncRate;
+        e.backgroundColor.push(colorString);
+        i++;
     }
-    return colors;
   }
-
+  
+    // Function to convert HSL to RGBA
+    hslToRgba(h, s, l, a) {
+      s /= 100;
+      l /= 100;
+      let c = (1 - Math.abs(2 * l - 1)) * s;
+      let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      let m = l - c / 2;
+      let r = 0, g = 0, b = 0;
+      if (0 <= h && h < 60) {
+          r = c; g = x; b = 0;
+      } else if (60 <= h && h < 120) {
+          r = x; g = c; b = 0;
+      } else if (120 <= h && h < 180) {
+          r = 0; g = c; b = x;
+      } else if (180 <= h && h < 240) {
+          r = 0; g = x; b = c;
+      } else if (240 <= h && h < 300) {
+          r = x; g = 0; b = c;
+      } else if (300 <= h && h < 360) {
+          r = c; g = 0; b = x;
+      }
+      r = Math.round((r + m) * 255);
+      g = Math.round((g + m) * 255);
+      b = Math.round((b + m) * 255);
+      return `rgba(${r},${g},${b},${a})`;
+    }
 
 
 
@@ -335,12 +451,12 @@ export class MainReportPageComponent implements OnInit {
   getLabelsByEmissionType():any{
     let map = new Map();
     
-    for(const element of this.emissionTypes){
+    for(const element of this.emissionTypeKeys){
       map.set(element,0);
     }
   
     for(const element of this.filteredMeasurements){
-      map.set(element.measurement.measurementTypeHeader,map.get(element.measurement.measurementType)+element.measurement.value);
+      map.set(element.measurement.measurementTypeHeader,map.get(element.measurement.measurementTypeHeader)+element.measurement.value);
     }
     return map;
   }

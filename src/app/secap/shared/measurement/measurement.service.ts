@@ -2,7 +2,7 @@ import {DataService} from "../service/data.service";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {HttpParams} from '@angular/common/http';
-import { BuildingMeasurement } from "./measurement-model";
+import { BuildingMeasurement, ReportModel } from "./measurement-model";
 import {Page} from "../model/page.model";
 
 @Injectable({
@@ -20,11 +20,19 @@ export class MeasurementService {
     }
 
     getMeasurementTypeHeadersHardcoded():string[]{
-        return ["Total","Electricity","District Heating/Cooling","Fossil Fuels","Renewable Energies"]
+        return ["Total","Electricity","District heating and cooling","Fossil fuels","Renewable energies"]
     }
 
     getGassesHardcoded():string[]{
         return ["All","CO2","CH4","N2O", "CO2e","Biofuel CO2"]
+    }
+
+    getGasNames():string[]{
+        return ["CO2","CH4","N2O", "CO2e","Biofuel CO2","EF"]
+    }
+
+    getEmissionTypeKeysHardcoded():string[]{
+        return ["Electricity","DistrictHeatingAndCooling","FossilFuels","RenewableEnergies"]
     }
 
     getMeasurementType(header: string): Observable<string[]> {
@@ -43,26 +51,36 @@ export class MeasurementService {
           .set('startDateMonth', filter.startDate.month)
           .set('startDateYear',filter.startDate.year)
           .set('endDateMonth', filter.endDate.month)
-          .set('endDateYear',filter.endDate.year);
-    
-        /*
-        filter.types.forEach((type: string, index: number) => {
-          params = params.append(`types[${index}]`, type);
-        });
-    */
-        
-        if(filter.typeHeaders[0]!='Total'){
-            filter.typeHeaders.forEach((header: string, index: number) => {
-                params = params.append(`typeHeaders[${index}]`, header);
-              });
-        }
-        if(filter.gasTypes[0]!='All'){
-            filter.gasTypes.forEach((gas: string, index: number) => {
-                params = params.append(`gasTypes[${index}]`, gas);
-              });
-        }
+          .set('endDateYear',filter.endDate.year)
+          .set('size',50);
 
+        if(filter.typeHeaders[0]=='Fossil fuels'){
+            params = params.append(`typeHeaders`, 'FossilFuels');
+        }
+        else if(filter.typeHeaders[0]=='Renewable energies'){
+            params = params.append(`typeHeaders`, 'RenewableEnergies');
+        }
+        else if(filter.typeHeaders[0]=='District Heating and cooling'){
+            params = params.append(`typeHeaders`, 'DistrictHeatingAndCooling');
+        }
+        else if(filter.typeHeaders[0]=='Electricity'){
+            params = params.append(`typeHeaders`, 'Electricity');
+        }
+        else if(filter.typeHeaders[0]!='Total'){
+            params = params.append(`typeHeaders`, filter.typeHeaders[0]);
+        }
         const path = "measurements/filter"
         return this.dataService.get<Page<BuildingMeasurement>>(path, params);
+      }
+
+      getCityMeasurementsByFilter(filter:any):Observable<ReportModel>{
+
+        const cityId: string = `${filter.cityId}_${filter.year}`;
+
+        let params = new HttpParams()
+        .set('cityId',cityId);
+
+        const path = "measurements/filter/city";
+        return this.dataService.get<ReportModel>(path, params);
       }
 }

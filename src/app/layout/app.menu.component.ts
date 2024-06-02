@@ -115,9 +115,9 @@ export class AppMenuComponent implements OnInit {
                                 routerLink: ['/report/residentialReport'],
                             },
                             {
-                                label: 'Diğer Raporlar',
+                                label: 'Şehir Raporları',
                                 icon: 'pi pi-fw pi-home',
-                                routerLink: ['/'],
+                                routerLink: ['/report/cityReport'],
                             },
                         ],
                     },
